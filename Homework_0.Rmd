@@ -1,0 +1,98 @@
+---
+title: "Homework 0"
+author: "Dima Mikhaylow"
+date: "8/25/2021"
+output: html_document
+---
+
+## Topic A.2
+1. Sampling
+  + a. mu, sigma/sqrt(n)
+  + b. The Central Limit Theorem
+  
+2. Manufacturing process with mean=116 and std=4.8
+  + a. For one subcomponent of length 118
+  ```{r}
+  1 - pnorm((118-116)/4.8)
+  ```
+  + b. For the sample mean of 3 subcomponents:
+  ``` {r}
+  1 - pnorm((118-116)/(4.8/sqrt(3)))
+  ```
+  
+## Topic A.3 -- Confidence Intervals
+3. The goals of constructing confidence intervals:
+  * Provide an estimate for the unknown parameter of interest
+  * Provide a range of plausible values for the unkown parameter
+  * Provide a measure of uncertainty
+  
+4. Increasing confidence level ...
+  * The multiplier increases in magnitude, thus 
+  * Increases the UVA carrmargin of error
+
+## Topic A.4 -- Hypothesis Testing 
+
+
+## General Questions
+
+## Topic B.2
+1. Load cars
+  + a. `cars.df` created 
+  + b. 32 obs. of 11 variables
+
+2. Load students
+  + a. `students.df` created
+  + b. 250 obs. of 9 variables
+  
+3. Libraries installed successfully 
+
+4. Load `faraway` package
+  + a. `corn.df` created
+  + b. 44 obs. of 2 variables
+
+## Topic B.3
+5. The following names are not valied in R:`.2020.Age`, `#Courses.2020`, `1_courses_2020`, and `age(2020)`.
+
+#### Notes on Names
+There are only a few rules regarding naming objects in R:
+* It must begin with a letter or .
+* If it begins with ., then . cannot be followed by a number
+* Only letters, numbers, ., and _ can be used 
+
+6. Create a vector
+```{r}
+practice = c(13, 91, 36, 95, 9, 3, 61, 20, 22, 91)
+class(practice)
+```
+
+7. Logical tests
+```{r}
+practice[5] != 10
+(practice[1] + practice[2]) < 104
+(practice[1] + practice[2]) <= 104
+(practice[2]==91) & (practice[9]==22)
+(practice[5] < 9) | (practice[6] >= 4)
+```
+
+8. Creating and operating on a matrix
+``` {r}
+Mat.A = matrix(data=c(4, 6, 1, 2, 3, 1), nrow=2, ncol=3)
+```
+
+```{r}
+names(Mat.A) <- c("Huey", "Dewey", "Loie")
+```
+
+```{r}
+Mat.A[2, 1]
+dim(Mat.A)
+
+```
+
+9. Order of levels in the factor:
+```{r}
+factor(practice)
+```
+
+## Topic B.4
+Done!

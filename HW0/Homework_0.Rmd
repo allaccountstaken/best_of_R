@@ -65,7 +65,7 @@ print(paste("ME =", ME))
   c. No, the mean of 3.25 is not a reasonable estimate, because this value is outside the confidence interval.
 
 ## Topic A.4 -- Hypothesis Testing 
-
+8. The goal is to see if an observed estimate is possible 
 
 ## General Questions
 

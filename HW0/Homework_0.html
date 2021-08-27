@@ -209,7 +209,7 @@ pre code {
 </ol>
 <ul>
 <li>Provide an estimate for the unknown parameter of interest</li>
-<li>Provide a range of plausible values for the unkown parameter</li>
+<li>Provide a range of plausible values for the unkonw parameter</li>
 <li>Provide a measure of uncertainty</li>
 </ul>
 <ol start="4" style="list-style-type: decimal">
@@ -217,8 +217,53 @@ pre code {
 </ol>
 <ul>
 <li>The multiplier increases in magnitude, thus</li>
-<li>Increases the UVA carrmargin of error</li>
+<li>The margin of error is also increasing</li>
 </ul>
+<ol start="5" style="list-style-type: decimal">
+<li>Increasing sample size…</li>
+</ol>
+<ul>
+<li>Decreases the standard error of sample mean and thus</li>
+<li>Margin of error and confidence interval go down (decrease)</li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li>Computing t-multiplier for the mean with given confidence intervals:</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>CI = 94%, n = 49</li>
+</ol>
+<pre class="r"><code>qt(1-((1-0.94)/2), 49-1)</code></pre>
+<pre><code>## [1] 1.926298</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>CI = 86%, n = 82</li>
+</ol>
+<pre class="r"><code>qt(1-((1-0.86)/2), 82-1)</code></pre>
+<pre><code>## [1] 1.490412</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>CI = 74%, n = 150</li>
+</ol>
+<pre class="r"><code>qt(1-((1-0.74)/2), 150-1)</code></pre>
+<pre><code>## [1] 1.130695</code></pre>
+<ol start="7" style="list-style-type: decimal">
+<li>Random sample of 100 students had mean GPA of 3.2 with std of 0.2.</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Calculate 97% confidence interval for the mean GPA. Firts, t-multiplier is given by qt() function:</li>
+</ol>
+<pre class="r"><code>t = qt((1-(1-0.97)/2), 99)
+upper = 3.2 + t*(0.2/sqrt(100))
+lower = 3.2 - t*(0.2/sqrt(100))
+print(paste(&quot;Lower:&quot;, lower, &quot;Upper:&quot;, upper))</code></pre>
+<pre><code>## [1] &quot;Lower: 3.15596362806041 Upper: 3.24403637193959&quot;</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Margin of Error (ME) can be found by using t-multiple and standard error or the mean. ME shows how far the sample mean will be away from the true population mean in 97% of random samples of 100 students.</li>
+</ol>
+<pre class="r"><code>ME = t * (0.2/sqrt(100))
+print(paste(&quot;ME =&quot;, ME))</code></pre>
+<pre><code>## [1] &quot;ME = 0.0440363719395924&quot;</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>No, it is not reasonable, because this value is outside the confidence interval.</li>
+</ol>
 </div>
 <div id="topic-a.4-hypothesis-testing" class="section level2">
 <h2>Topic A.4 – Hypothesis Testing</h2>

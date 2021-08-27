@@ -23,12 +23,46 @@ output: html_document
 ## Topic A.3 -- Confidence Intervals
 3. The goals of constructing confidence intervals:
   * Provide an estimate for the unknown parameter of interest
-  * Provide a range of plausible values for the unkown parameter
+  * Provide a range of plausible values for the unkonw parameter
   * Provide a measure of uncertainty
   
 4. Increasing confidence level ...
   * The multiplier increases in magnitude, thus 
-  * Increases the UVA carrmargin of error
+  * The margin of error is also increasing
+
+5. Increasing sample size...
+  * Decreases the standard error of sample mean and thus 
+  * Margin of error and confidence interval go down (decrease)
+  
+6. Computing t-multiplier for the mean with given confidence intervals: 
+  a. CI = 94%, n = 49
+```{r}
+qt(1-((1-0.94)/2), 49-1)
+```
+  b. CI = 86%, n = 82
+```{r}
+qt(1-((1-0.86)/2), 82-1)
+```
+  c. CI = 74%, n = 150
+```{r}
+qt(1-((1-0.74)/2), 150-1)
+```
+
+
+7. Random sample of 100 students had mean GPA of 3.2 with std of 0.2.
+  a. Calculate 97% confidence interval for the mean GPA. Firts, t-multiplier is given by qt() function:
+```{r}
+t = qt((1-(1-0.97)/2), 99)
+upper = 3.2 + t*(0.2/sqrt(100))
+lower = 3.2 - t*(0.2/sqrt(100))
+print(paste("Lower:", lower, "Upper:", upper))
+```
+  b. Margin of Error (ME) can be found by using t-multiple and standard error or the mean. ME shows how far the sample mean will be away from the true population mean in 97% of random samples of 100 students.
+```{r}
+ME = t * (0.2/sqrt(100))
+print(paste("ME =", ME))
+```
+  c. No, the mean of 3.25 is not a reasonable estimate, because this value is outside the confidence interval.
 
 ## Topic A.4 -- Hypothesis Testing 
 

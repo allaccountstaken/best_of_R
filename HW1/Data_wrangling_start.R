@@ -22,7 +22,7 @@ tapply(df$StudyHrs, df$Gender, sd, na.rm=T)
 
 
 
-#library(ggplot2)
+#library(ggplot2)sw 
 Data <- read.csv('data/ClassDataPrevious.csv', header=TRUE)
 
 dim(Data)

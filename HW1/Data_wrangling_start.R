@@ -56,4 +56,33 @@ CI_diff_lower <- mean_diff - t_critical * s_pooled* sqrt(1/n_females + 1/n_males
 CI_diff_upper <- mean_diff + t_critical * s_pooled* sqrt(1/n_females + 1/n_males)
 print(paste("Difference of mean CI contains zero: [", CI_diff_lower,",", CI_diff_upper, "]"))
 
+# 7. Compare the median StudyHrs across genders and Smoke
+library(dplyr)
 
+df%>% 
+  group_by(Gender=Gender, Smoker=Smoke)%>% 
+  summarise(medHours=median(StudyHrs, na.rm=T))
+
+
+
+# 8. Create a new variable PartyAnimal which takes "yes" if PartyNum > 8, "no" otherwise
+df <- df %>% 
+  mutate(PartyAnimal = ifelse(PartyNum>8, "Yes", "No"))
+
+# 9. Create a new variable GPA.cat: low<3.0, moderate<3.5, high>3.5
+df <- df %>% 
+  mutate(GPA.cat = cut(GPA, breaks=c(-Inf, 3, 3.5, Inf), 
+                       labels=c("low", "moderate", "high")))
+
+#10. Add PartyAnimal and GPA.cat to the dataframe and save to "new_students.csv"
+head(df)
+write.csv(Data, file="data/newdata.csv", row.names = TRUE)
+
+#11. Suppose we want to focus on students who have low GPAs (below 3.0), party a lot
+#(more than 8 days a month), and study little (less than 15 hours a week). Create a
+#data frame that contains these students. How many such students are there 
+
+selected_data <- df %>% 
+  filter(GPA.cat=="low" & PartyAnimal=="Yes" & StudyHrs < 15)
+
+dim(selected_data)[1]

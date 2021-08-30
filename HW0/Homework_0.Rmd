@@ -76,6 +76,30 @@ print(paste("ME =", ME))
 
 11. Larger test statistic gives more evidence against the H0, as it is more unlikely that the observed value is due to a random variation.It shows how dissimilar the sample is from H0. The bigger the magnitude, the more dissimilar the sample is.
 
+12. Increasing the difference between the sample mean and the population mean, increases the test statistics producing stronger evidence to reject H0.
+
+13. Increasing sample size increases the magnitude of test statistic and thus produces more evidence against H0.
+
+14. Critical values for t:
+  + a. Two sided => use a/2 => 1.77
+```{r}
+qt(1-(0.08/2), 95)
+```
+  + b.  One sided => use a => 1.19
+```{r}
+qt(1-0.12, 42)
+```
+  + c. One sided => use a => 1.71
+``` {r}
+qt(1-0.045, 132)
+```
+
+15. Alternative approach is to obtain p-values:
+
+  + a.
+  + b.
+  + c.
+
 ## General Questions
 
 ## Topic B.2

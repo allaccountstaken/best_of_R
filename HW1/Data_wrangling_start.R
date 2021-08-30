@@ -3,24 +3,54 @@ library(tidyverse)
 df = read.table("data/students.txt", header=TRUE)
 head(df)
 
-# Remove column Student ID or index?
+# 1. Variable that is not a part of any meaningful analysis? 
+#Remove column Student ID or index?
 
-# How many students are there in the dataset?
-dim(df)
+# 2. How many students are there in the dataset? 
+# Number of rows is given by the first dimension of dim()
+dim(df)[1]
 
-# How many students are missing entry in the last 2 columns?
-#df[!complete.cases(Data), -2]
+# 3. How many students are missing entry in the last 2 columns?
+df[!complete.cases(Data), -2]
 
-# Report the median values of the numeric variables.
+# 4. Report the median values of the numeric variables.
+# First, check where numeric columns are. Second, use apply() to get the medians
 head(df)
 apply(df[, c(6,7,8,9)], 2, median)
 
-#Report the mean and standard deviation of StudyHrs for female and male students
-tapply(df$StudyHrs, df$Gender, median, na.rm=T)
-tapply(df$StudyHrs, df$Gender, sd, na.rm=T)
+# 5. Report the mean and standard deviation of StudyHrs for female and male students
+# Use tapply() with group by df$Gender first for median and then for std.
+mean_females <- tapply(df$StudyHrs, df$Gender, median, na.rm=T)[1]
+mean_males <- tapply(df$StudyHrs, df$Gender, median, na.rm=T)[2]
+sd_females <- tapply(df$StudyHrs, df$Gender, sd, na.rm=T)[1]
+sd_males <- tapply(df$StudyHrs, df$Gender, sd, na.rm=T)[2]
+print(paste("Female mean:", mean_females, "-- Female std:", sd_females))
+print(paste("Male mean:", mean_males, "-- Male std:", sd_males))
 
+# 6. Construct a 95% confidence interval for the mean StudyHrs for female/male students
+# Is there evidence that the means are different? 
+#First, get CI for females, i.e sample mean +/- margin of error, z*sigma/n
+n_females <- count(filter(df, Gender=="female"))
+CI_females_upper = mean_females + (qnorm(1-((1-0.95)/2))*sd_females)/sqrt(n_females)
+CI_females_lower = mean_females - (qnorm(1-((1-0.95)/2))*sd_females)/sqrt(n_females)
+print(paste("Female CI: [", CI_females_lower,",", CI_females_upper, "]"))
 
+#Same for males:
+n_males <- count(filter(df, Gender=="male"))
+CI_males_upper = mean_males + (qnorm(1-((1-0.95)/2))*sd_males)/sqrt(n_males)
+CI_males_lower = mean_males - (qnorm(1-((1-0.95)/2))*sd_males)/sqrt(n_males)
+print(paste("Male CI: [", CI_males_lower,",", CI_males_upper, "]"))
 
+#Second, look if the difference of the means is statistically significant.
+
+qnorm(1-((1-0.95)/2))
+qnorm(0.975)
+
+n_females <- count(filter(df, Gender=="female"))
+
+n_males <- count(filter(df, Gender=="male"))
+
+n_males
 
 #library(ggplot2)sw 
 Data <- read.csv('data/ClassDataPrevious.csv', header=TRUE)

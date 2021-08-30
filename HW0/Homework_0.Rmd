@@ -65,7 +65,16 @@ print(paste("ME =", ME))
   c. No, the mean of 3.25 is not a reasonable estimate, because this value is outside the confidence interval.
 
 ## Topic A.4 -- Hypothesis Testing 
-8. The goal is to see if an observed estimate is possible 
+8. The goal is to see if an observed estimate is due to random variation in the data or is in fact a true feature of the phenomenon.
+
+9. Hypothesis should be written about an unobservant population parameter. It is evaluated (rejected or failed to reject) by checking observable sample statistics.
+
+10. Drafting hypothesis statements:
+  + a. H0(avgMPG == 29 m/g), Ha(avgMPG > 29 m/g), reject H0 => gas mileage improved
+  + b. H0(Dimameter == 4 mil), Ha(Diameter != 4 mil), two-sided test as both are bad
+  + c. H0(avgTime == 2 hours), Ha(acgTime < 2 hours), travel time improved
+
+11. Larger test statistic gives more evidence against the H0, as it is more unlikely that the observed value is due to a random variation.It shows how dissimilar the sample is from H0. The bigger the magnitude, the more dissimilar the sample is.
 
 ## General Questions
 

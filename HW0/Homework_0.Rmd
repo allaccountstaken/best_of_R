@@ -21,10 +21,10 @@ output: html_document
   ```
   
 ## Topic A.3 -- Confidence Intervals
-3. The goals of constructing confidence intervals:
-  * Provide an estimate for the unknown parameter of interest
-  * Provide a range of plausible values for the unkonw parameter
-  * Provide a measure of uncertainty
+3. The goals of constructing confidence intervals (Etimates +/- Margin of Error, where Confidence Level C = 1 - a(significance level), another way to state this Estimates +/- Multiplier(1-a/2)*Standard Error of Estimate(s/sqrt(n)):
+  * Provide an estimate for the unknown parameter of interest;
+  * Provide a range of plausible values for the unkonw parameter;
+  * Provide a measure of uncertainty.
   
 4. Increasing confidence level ...
   * The multiplier increases in magnitude, thus 

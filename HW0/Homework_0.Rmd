@@ -99,8 +99,33 @@ qt(1-0.045, 132)
   + a.
   + b.
   + c.
+  
+16. Historical corn yield - hypothesis testing:
+  
+  + a.
+  + b.
+  + c.
+  + d.
+  + e.
 
 ## General Questions
+
+17. Obtain the critical value of a hypothesis test
+
+18. Obtain the t-multiplier for a 98% confidence interval
+
+19. Compare the critical value and the t-multiplier found in the previous 2 parts.
+
+20. Suppose the hypothesis test in part 17 is carried out and the p-value is 0.043. Which
+of the following confidence intervals is/are possible?
+
+21. A random sample of 85 banded archerfish were collected, and their lengths were measured and recorded. Their average length was 20cm with a standard deviation of 3cm.
+  
+  + a.
+  + b.
+  + c.
+  + d.
+
 
 ## Topic B.2
 1. Load cars

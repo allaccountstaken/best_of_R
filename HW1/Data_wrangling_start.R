@@ -10,8 +10,8 @@ head(df)
 # Number of rows is given by the first dimension of dim()
 dim(df)[1]
 
-# 3. How many students are missing entry in the last 2 columns?
-df[!complete.cases(Data), -2]
+# 3. How many students have a missing entry in at least one of the columns?
+dim(df[!complete.cases(df),])[1]
 
 # 4. Report the median values of the numeric variables.
 # First, check where numeric columns are. Second, use apply() to get the medians
@@ -71,7 +71,7 @@ df <- df %>%
 
 # 9. Create a new variable GPA.cat: low<3.0, moderate<3.5, high>3.5
 df <- df %>% 
-  mutate(GPA.cat = cut(GPA, breaks=c(-Inf, 3, 3.5, Inf), 
+  mutate(GPA.cat = cut(GPA, breaks=c(-Inf, 2.9999, 3.4999, Inf), 
                        labels=c("low", "moderate", "high")))
 
 #10. Add PartyAnimal and GPA.cat to the dataframe and save to "new_students.csv"
@@ -85,4 +85,5 @@ write.csv(Data, file="data/newdata.csv", row.names = TRUE)
 selected_data <- df %>% 
   filter(GPA.cat=="low" & PartyAnimal=="Yes" & StudyHrs < 15)
 
-dim(selected_data)[1]
+dim(selected_data)
+head(df)

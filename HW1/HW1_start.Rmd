@@ -71,6 +71,8 @@ counties, as well as the state the counties belong to.
 ``` {r}
 head(latest[order(c(latest$cases, latest$death.rate), decreasing = TRUE),], 10)
 ```
+Another way to do the same:
+head(latest[order(-latest$cases, latest$death.rate), ], 10)
 # HELP NEEDED WITH #7 - not sure what 100,000 cases refer to?
 
 g. Display the number of cases, deaths, death rate for the following counties:
@@ -92,12 +94,42 @@ frame called state.level that:
   * has 3 columns: name of the state, number of cases, number of deaths
   * is ordered alphabetically by name of the state
   * Display the first 6 rows of the data frame state.level.
+```{r}
+state.level <- aggregate(cbind(cases, deaths)~state, data=latest, FUN=sum)
+head(state.level)
+```
+
 b. Calculate the death rate (call it state.rate) for each state. Report the death
 rate as a percent and round to two decimal places. Add state.rate as a new
 column to the data frame state.level. Display the first 6 rows of the data frame
 state.level.
+```{r}
+state.level$death_rate = round((state.level$deaths/ state.level$cases) * 100, 2)
+head(state.level)
+```
+
 c. What is the death rate in Virginia?
+```{r}
+state.level[which(state.level$state=="Virginia"), c(1,4)]
+```
+
 d. What is the death rate in Puerto Rico?
+```{r}
+state.level[which(state.level$state=="Puerto Rico"), ]
+```
+# HELP NEEDED - PR has unknown death rate as deaths were not reported
+
 e. Which states have the 10 highest death rates?
+```{r}
+head(state.level[order(-state.level$death_rate), ], 10)
+```
+
 f. Which states have the 10 lowest death rates?
+```{r}
+head(state.level[order(state.level$death_rate), ], 10)
+```
+
 g. Export this dataset as a .csv file named stateCovid.csv. 
+```{r}
+write.csv(state.level, 'stateCovid.csv', row.names = FALSE)
+```

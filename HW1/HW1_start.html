@@ -285,9 +285,7 @@ head(latest)</code></pre>
 ## 1381655      Riverside California  300879   4614       1.53
 ## 1381658 San Bernardino California  298599   4760       1.59
 ## 1381659      San Diego California  280410   3760       1.34</code></pre>
-</div>
-<div id="help-needed-with-7---not-sure-what-100000-cases-refer-to" class="section level1">
-<h1>HELP NEEDED WITH #7 - not sure what 100,000 cases refer to?</h1>
+<p>Another way to do the same: head(latest[order(-latest<span class="math inline">\(cases, latest\)</span>death.rate), ], 10) # HELP NEEDED WITH #7 - not sure what 100,000 cases refer to?</p>
 <ol start="7" style="list-style-type: lower-alpha">
 <li>Display the number of cases, deaths, death rate for the following counties:</li>
 </ol>
@@ -303,6 +301,7 @@ head(latest)</code></pre>
 <pre class="r"><code>latest[which(latest$county==&quot;Charlottesville city&quot;), c(3, 4, 5)]</code></pre>
 <pre><code>##         cases deaths death.rate
 ## 1384385  4014     57       1.42</code></pre>
+</div>
 <div id="state-level-analysis" class="section level2">
 <h2>2. State level analysis</h2>
 <ol style="list-style-type: lower-alpha">
@@ -314,15 +313,76 @@ head(latest)</code></pre>
 <li>is ordered alphabetically by name of the state</li>
 <li>Display the first 6 rows of the data frame state.level.</li>
 </ul>
+<pre class="r"><code>state.level &lt;- aggregate(cbind(cases, deaths)~state, data=latest, FUN=sum)
+head(state.level)</code></pre>
+<pre><code>##        state   cases deaths
+## 1    Alabama  545028  11188
+## 2     Alaska   69534    352
+## 3    Arizona  882691  17653
+## 4   Arkansas  338986   5842
+## 5 California 3793055  63345
+## 6   Colorado  547961   6746</code></pre>
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Calculate the death rate (call it state.rate) for each state. Report the death rate as a percent and round to two decimal places. Add state.rate as a new column to the data frame state.level. Display the first 6 rows of the data frame state.level.</li>
+</ol>
+<pre class="r"><code>state.level$death_rate = round((state.level$deaths/ state.level$cases) * 100, 2)
+head(state.level)</code></pre>
+<pre><code>##        state   cases deaths death_rate
+## 1    Alabama  545028  11188       2.05
+## 2     Alaska   69534    352       0.51
+## 3    Arizona  882691  17653       2.00
+## 4   Arkansas  338986   5842       1.72
+## 5 California 3793055  63345       1.67
+## 6   Colorado  547961   6746       1.23</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
 <li>What is the death rate in Virginia?</li>
+</ol>
+<pre class="r"><code>state.level[which(state.level$state==&quot;Virginia&quot;), c(1,4)]</code></pre>
+<pre><code>##       state death_rate
+## 49 Virginia       1.66</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
 <li>What is the death rate in Puerto Rico?</li>
+</ol>
+<pre class="r"><code>state.level[which(state.level$state==&quot;Puerto Rico&quot;), ]</code></pre>
+<pre><code>## [1] state      cases      deaths     death_rate
+## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
+</div>
+<div id="help-needed---pr-has-unknown-death-rate-as-deaths-were-not-reported" class="section level1">
+<h1>HELP NEEDED - PR has unknown death rate as deaths were not reported</h1>
+<ol start="5" style="list-style-type: lower-alpha">
 <li>Which states have the 10 highest death rates?</li>
+</ol>
+<pre class="r"><code>head(state.level[order(-state.level$death_rate), ], 10)</code></pre>
+<pre><code>##                   state   cases deaths death_rate
+## 22        Massachusetts  660563  17881       2.71
+## 31           New Jersey 1016219  26253       2.58
+## 33             New York 2102003  52811       2.51
+## 7           Connecticut  346564   8244       2.38
+## 9  District of Columbia   49041   1136       2.32
+## 25          Mississippi  318048   7324       2.30
+## 40         Pennsylvania 1208879  27349       2.26
+## 19            Louisiana  472222  10605       2.25
+## 32           New Mexico  203330   4275       2.10
+## 21             Maryland  460406   9587       2.08</code></pre>
+<ol start="6" style="list-style-type: lower-alpha">
 <li>Which states have the 10 lowest death rates?</li>
+</ol>
+<pre class="r"><code>head(state.level[order(state.level$death_rate), ], 10)</code></pre>
+<pre><code>##                       state  cases deaths death_rate
+## 2                    Alaska  69534    352       0.51
+## 46                     Utah 405721   2286       0.56
+## 48           Virgin Islands   3512     28       0.80
+## 47                  Vermont  24218    255       1.05
+## 28                 Nebraska 222317   2385       1.07
+## 13                    Idaho 192704   2103       1.09
+## 36 Northern Mariana Islands    183      2       1.09
+## 52                Wisconsin 675152   7923       1.17
+## 53                  Wyoming  60543    720       1.19
+## 6                  Colorado 547961   6746       1.23</code></pre>
+<ol start="7" style="list-style-type: lower-alpha">
 <li>Export this dataset as a .csv file named stateCovid.csv.</li>
 </ol>
-</div>
+<pre class="r"><code>write.csv(state.level, &#39;stateCovid.csv&#39;, row.names = FALSE)</code></pre>
 </div>
 
 

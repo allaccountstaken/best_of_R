@@ -1,0 +1,30 @@
+---
+title: "HW1"
+author: "Dima Mikhaylow"
+date: "9/3/2021"
+output: html_document
+---
+
+Loading and storing COVID data in R:
+
+``` {r}
+Covid <- read.csv('USCovid.csv', header=TRUE)
+head(Covid)
+```
+
+## Country level analysis
+
+1.    We are interested in the data at the most recent date, June 3 2021. Create a data
+frame called `latest` that:
+  *   has only rows pertaining to data from June 3 2021:
+
+```{r}
+latest <- subset(Covid, date == "2021-06-03")
+dim(latest)
+head(latest)
+```
+  * removes rows pertaining to counties that are "Unknown"
+
+  * removes the column `date` and `fips`
+
+

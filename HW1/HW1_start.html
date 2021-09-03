@@ -182,8 +182,8 @@ head(Covid)</code></pre>
 ## 5 2020-01-24 Snohomish Washington 53061     1      0
 ## 6 2020-01-25    Orange California  6059     1      0</code></pre>
 <div id="country-level-analysis" class="section level2">
-<h2>Country level analysis</h2>
-<ol style="list-style-type: decimal">
+<h2>1. Country level analysis</h2>
+<ol style="list-style-type: lower-alpha">
 <li>We are interested in the data at the most recent date, June 3 2021. Create a data frame called <code>latest</code> that:</li>
 </ol>
 <ul>
@@ -192,18 +192,56 @@ head(Covid)</code></pre>
 <pre class="r"><code>latest &lt;- subset(Covid, date == &quot;2021-06-03&quot;)
 dim(latest)</code></pre>
 <pre><code>## [1] 3247    6</code></pre>
-<pre class="r"><code>head(latest)</code></pre>
-<pre><code>##               date  county   state fips cases deaths
-## 1381437 2021-06-03 Autauga Alabama 1001  7172    111
-## 1381438 2021-06-03 Baldwin Alabama 1003 21684    312
-## 1381439 2021-06-03 Barbour Alabama 1005  2343     59
-## 1381440 2021-06-03    Bibb Alabama 1007  2665     64
-## 1381441 2021-06-03  Blount Alabama 1009  6894    139
-## 1381442 2021-06-03 Bullock Alabama 1011  1236     42</code></pre>
 <ul>
-<li><p>removes rows pertaining to counties that are “Unknown”</p></li>
-<li><p>removes the column <code>date</code> and <code>fips</code></p></li>
+<li>removes rows pertaining to counties that are “Unknown”</li>
 </ul>
+<pre class="r"><code>latest &lt;- subset(latest, latest$county!=&#39;Unknown&#39;)
+dim(latest)</code></pre>
+<pre><code>## [1] 3221    6</code></pre>
+<ul>
+<li>removes the column <code>date</code> and <code>fips</code></li>
+</ul>
+<pre class="r"><code>latest &lt;- subset(latest, select=-c(date, fips))
+head(latest)</code></pre>
+<pre><code>##          county   state cases deaths
+## 1381437 Autauga Alabama  7172    111
+## 1381438 Baldwin Alabama 21684    312
+## 1381439 Barbour Alabama  2343     59
+## 1381440    Bibb Alabama  2665     64
+## 1381441  Blount Alabama  6894    139
+## 1381442 Bullock Alabama  1236     42</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li><p>Calculate the death rate (call it death.rate) for each county. Report the death rate as a percent and round to two decimal places. Add death.rate as a new column to the data frame latest. Display the first 6 rows of the data frame latest.</p></li>
+<li><p>Display the counties with the 10 largest number of cases. Be sure to also display the number of deaths and death rates in these counties, as well as the state the counties belong to.</p></li>
+<li><p>Display the counties with the 10 largest number of deaths. Be sure to also display the number of cases and death rates in these counties, as well as the state the counties belong to.</p></li>
+<li><p>Display the counties with the 10 highest death rates. Be sure to also display the number of cases and deaths in these counties, as well as the state the counties belong to. Is there sometime you notice about these counties?</p></li>
+<li><p>Display the counties with the 10 highest death rates among counties with at least 100,000 cases. Be sure to also display the number of cases and deaths in these counties, as well as the state the counties belong to.</p></li>
+<li><p>Display the number of cases, deaths, death rate for the following counties:</p></li>
+</ol>
+<ul>
+<li>Albemarle, Virginia</li>
+<li>Charlottesville city, Virginia</li>
+</ul>
+</div>
+<div id="state-level-analysis" class="section level2">
+<h2>2. State level analysis</h2>
+<ol style="list-style-type: lower-alpha">
+<li>We are interested in the data at the most recent date, June 3 2021. Create a data frame called state.level that:</li>
+</ol>
+<ul>
+<li>has 55 rows: 1 for each state, DC, and territory</li>
+<li>has 3 columns: name of the state, number of cases, number of deaths</li>
+<li>is ordered alphabetically by name of the state</li>
+<li>Display the first 6 rows of the data frame state.level.</li>
+</ul>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Calculate the death rate (call it state.rate) for each state. Report the death rate as a percent and round to two decimal places. Add state.rate as a new column to the data frame state.level. Display the first 6 rows of the data frame state.level.</li>
+<li>What is the death rate in Virginia?</li>
+<li>What is the death rate in Puerto Rico?</li>
+<li>Which states have the 10 highest death rates?</li>
+<li>Which states have the 10 lowest death rates?</li>
+<li>Export this dataset as a .csv file named stateCovid.csv.</li>
+</ol>
 </div>
 
 

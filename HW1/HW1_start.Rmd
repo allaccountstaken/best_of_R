@@ -39,7 +39,8 @@ rate as a percent and round to two decimal places. Add death.rate as a new
 column to the data frame latest. Display the first 6 rows of the data frame
 latest.
 ```{r}
-
+latest$death.rate = round((latest$deaths / latest$cases) * 100, 2)
+head(latest)
 ```
 c. Display the counties with the 10 largest number of cases. Be sure to also display
 the number of deaths and death rates in these counties, as well as the state the

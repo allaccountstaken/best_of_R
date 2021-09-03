@@ -211,7 +211,18 @@ head(latest)</code></pre>
 ## 1381441  Blount Alabama  6894    139
 ## 1381442 Bullock Alabama  1236     42</code></pre>
 <ol start="2" style="list-style-type: lower-alpha">
-<li><p>Calculate the death rate (call it death.rate) for each county. Report the death rate as a percent and round to two decimal places. Add death.rate as a new column to the data frame latest. Display the first 6 rows of the data frame latest.</p></li>
+<li>Calculate the death rate (call it death.rate) for each county. Report the death rate as a percent and round to two decimal places. Add death.rate as a new column to the data frame latest. Display the first 6 rows of the data frame latest.</li>
+</ol>
+<pre class="r"><code>latest$death.rate = round((latest$deaths / latest$cases) * 100, 2)
+head(latest)</code></pre>
+<pre><code>##          county   state cases deaths death.rate
+## 1381437 Autauga Alabama  7172    111       1.55
+## 1381438 Baldwin Alabama 21684    312       1.44
+## 1381439 Barbour Alabama  2343     59       2.52
+## 1381440    Bibb Alabama  2665     64       2.40
+## 1381441  Blount Alabama  6894    139       2.02
+## 1381442 Bullock Alabama  1236     42       3.40</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
 <li><p>Display the counties with the 10 largest number of cases. Be sure to also display the number of deaths and death rates in these counties, as well as the state the counties belong to.</p></li>
 <li><p>Display the counties with the 10 largest number of deaths. Be sure to also display the number of cases and death rates in these counties, as well as the state the counties belong to.</p></li>
 <li><p>Display the counties with the 10 highest death rates. Be sure to also display the number of cases and deaths in these counties, as well as the state the counties belong to. Is there sometime you notice about these counties?</p></li>

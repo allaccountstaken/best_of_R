@@ -223,17 +223,86 @@ head(latest)</code></pre>
 ## 1381441  Blount Alabama  6894    139       2.02
 ## 1381442 Bullock Alabama  1236     42       3.40</code></pre>
 <ol start="3" style="list-style-type: lower-alpha">
-<li><p>Display the counties with the 10 largest number of cases. Be sure to also display the number of deaths and death rates in these counties, as well as the state the counties belong to.</p></li>
-<li><p>Display the counties with the 10 largest number of deaths. Be sure to also display the number of cases and death rates in these counties, as well as the state the counties belong to.</p></li>
-<li><p>Display the counties with the 10 highest death rates. Be sure to also display the number of cases and deaths in these counties, as well as the state the counties belong to. Is there sometime you notice about these counties?</p></li>
-<li><p>Display the counties with the 10 highest death rates among counties with at least 100,000 cases. Be sure to also display the number of cases and deaths in these counties, as well as the state the counties belong to.</p></li>
-<li><p>Display the number of cases, deaths, death rate for the following counties:</p></li>
+<li>Display the counties with the 10 largest number of cases. Be sure to also display the number of deaths and death rates in these counties, as well as the state the counties belong to.</li>
+</ol>
+<pre class="r"><code>head(latest[order(latest$cases, decreasing = TRUE),], 10)</code></pre>
+<pre><code>##                 county      state   cases deaths death.rate
+## 1381641    Los Angeles California 1245127  24375       1.96
+## 1383311  New York City   New York  949986  33257       3.50
+## 1382052           Cook   Illinois  554390  10893       1.96
+## 1381539       Maricopa    Arizona  551509  10084       1.83
+## 1381801     Miami-Dade    Florida  501925   6472       1.29
+## 1384160         Harris      Texas  401345   6462       1.61
+## 1384116         Dallas      Texas  303533   4082       1.34
+## 1381655      Riverside California  300879   4614       1.53
+## 1381658 San Bernardino California  298599   4760       1.59
+## 1381659      San Diego California  280410   3760       1.34</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Display the counties with the 10 largest number of deaths. Be sure to also display the number of cases and death rates in these counties, as well as the state the counties belong to.</li>
+</ol>
+<pre class="r"><code>head(latest[order(latest$deaths, decreasing = TRUE),], 10)</code></pre>
+<pre><code>##                 county      state   cases deaths death.rate
+## 1383311  New York City   New York  949986  33257       3.50
+## 1381641    Los Angeles California 1245127  24375       1.96
+## 1382052           Cook   Illinois  554390  10893       1.96
+## 1381539       Maricopa    Arizona  551509  10084       1.83
+## 1381801     Miami-Dade    Florida  501925   6472       1.29
+## 1384160         Harris      Texas  401345   6462       1.61
+## 1381652         Orange California  272242   5070       1.86
+## 1382761          Wayne   Michigan  164612   5048       3.07
+## 1381658 San Bernardino California  298599   4760       1.59
+## 1381655      Riverside California  300879   4614       1.53</code></pre>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>Display the counties with the 10 highest death rates. Be sure to also display the number of cases and deaths in these counties, as well as the state the counties belong to. Is there sometime you notice about these counties?</li>
+</ol>
+<ul>
+<li>Observation: death rates are high but the actuall number of cases is relatively small:</li>
+</ul>
+<pre class="r"><code>head(latest[order(latest$death.rate, decreasing = TRUE),], 10)</code></pre>
+<pre><code>##               county      state cases deaths death.rate
+## 1383143        Grant   Nebraska    41      4       9.76
+## 1384261       Sabine      Texas   524     45       8.59
+## 1383084    Petroleum    Montana    12      1       8.33
+## 1383261      Harding New Mexico    12      1       8.33
+## 1384137        Foard      Texas   124     10       8.06
+## 1381896      Hancock    Georgia   928     68       7.33
+## 1381888     Glascock    Georgia   269     19       7.06
+## 1384232       Motley      Texas   116      8       6.90
+## 1381847      Candler    Georgia   978     67       6.85
+## 1384283 Throckmorton      Texas    73      5       6.85</code></pre>
+<ol start="6" style="list-style-type: lower-alpha">
+<li>Display the counties with the 10 highest death rates among counties with at least 100,000 cases. Be sure to also display the number of cases and deaths in these counties, as well as the state the counties belong to.</li>
+</ol>
+<pre class="r"><code>head(latest[order(c(latest$cases, latest$death.rate), decreasing = TRUE),], 10)</code></pre>
+<pre><code>##                 county      state   cases deaths death.rate
+## 1381641    Los Angeles California 1245127  24375       1.96
+## 1383311  New York City   New York  949986  33257       3.50
+## 1382052           Cook   Illinois  554390  10893       1.96
+## 1381539       Maricopa    Arizona  551509  10084       1.83
+## 1381801     Miami-Dade    Florida  501925   6472       1.29
+## 1384160         Harris      Texas  401345   6462       1.61
+## 1384116         Dallas      Texas  303533   4082       1.34
+## 1381655      Riverside California  300879   4614       1.53
+## 1381658 San Bernardino California  298599   4760       1.59
+## 1381659      San Diego California  280410   3760       1.34</code></pre>
+</div>
+<div id="help-needed-with-7---not-sure-what-100000-cases-refer-to" class="section level1">
+<h1>HELP NEEDED WITH #7 - not sure what 100,000 cases refer to?</h1>
+<ol start="7" style="list-style-type: lower-alpha">
+<li>Display the number of cases, deaths, death rate for the following counties:</li>
 </ol>
 <ul>
 <li>Albemarle, Virginia</li>
+</ul>
+<pre class="r"><code>latest[which(latest$county==&quot;Albemarle&quot;), c(3, 4, 5)]</code></pre>
+<pre><code>##         cases deaths death.rate
+## 1384363  5801     83       1.43</code></pre>
+<ul>
 <li>Charlottesville city, Virginia</li>
 </ul>
-</div>
+<pre class="r"><code>latest[which(latest$county==&quot;Charlottesville city&quot;), c(3, 4, 5)]</code></pre>
+<pre><code>##         cases deaths death.rate
+## 1384385  4014     57       1.42</code></pre>
 <div id="state-level-analysis" class="section level2">
 <h2>2. State level analysis</h2>
 <ol style="list-style-type: lower-alpha">
@@ -253,6 +322,7 @@ head(latest)</code></pre>
 <li>Which states have the 10 lowest death rates?</li>
 <li>Export this dataset as a .csv file named stateCovid.csv.</li>
 </ol>
+</div>
 </div>
 
 

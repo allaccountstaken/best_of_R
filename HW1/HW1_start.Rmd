@@ -69,9 +69,9 @@ f. Display the counties with the 10 highest death rates among counties with at l
 100,000 cases. Be sure to also display the number of cases and deaths in these
 counties, as well as the state the counties belong to.
 ``` {r}
-head(latest[order((latest$cases, latest$death.rate), decreasing = TRUE),], 10)
+head(latest[order(c(latest$cases, latest$death.rate), decreasing = TRUE),], 10)
 ```
-# HElP NEEDED WITH #7 - not sure what 100,000 cases is
+# HELP NEEDED WITH #7 - not sure what 100,000 cases refer to?
 
 g. Display the number of cases, deaths, death rate for the following counties:
   * Albemarle, Virginia

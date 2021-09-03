@@ -42,26 +42,48 @@ latest.
 latest$death.rate = round((latest$deaths / latest$cases) * 100, 2)
 head(latest)
 ```
+
 c. Display the counties with the 10 largest number of cases. Be sure to also display
 the number of deaths and death rates in these counties, as well as the state the
 counties belong to.
+```{r}
+head(latest[order(latest$cases, decreasing = TRUE),], 10)
+```
 
 d. Display the counties with the 10 largest number of deaths. Be sure to also display
 the number of cases and death rates in these counties, as well as the state the
 counties belong to.
+```{r}
+head(latest[order(latest$deaths, decreasing = TRUE),], 10)
+```
 
 e. Display the counties with the 10 highest death rates. Be sure to also display the
 number of cases and deaths in these counties, as well as the state the counties
 belong to. Is there sometime you notice about these counties?
+  * Observation: death rates are high but the actuall number of cases is relatively small:
+``` {r}
+head(latest[order(latest$death.rate, decreasing = TRUE),], 10)
+```
 
 f. Display the counties with the 10 highest death rates among counties with at least
 100,000 cases. Be sure to also display the number of cases and deaths in these
 counties, as well as the state the counties belong to.
+``` {r}
+head(latest[order((latest$cases, latest$death.rate), decreasing = TRUE),], 10)
+```
+# HElP NEEDED WITH #7 - not sure what 100,000 cases is
 
 g. Display the number of cases, deaths, death rate for the following counties:
   * Albemarle, Virginia
+```{r}
+latest[which(latest$county=="Albemarle"), c(3, 4, 5)]
+```
+
   * Charlottesville city, Virginia
-  
+```{r}
+latest[which(latest$county=="Charlottesville city"), c(3, 4, 5)]
+```
+
 ## 2. State level analysis
 
 a. We are interested in the data at the most recent date, June 3 2021. Create a data

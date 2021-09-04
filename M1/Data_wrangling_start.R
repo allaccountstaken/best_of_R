@@ -71,12 +71,12 @@ df <- df %>%
 
 # 9. Create a new variable GPA.cat: low<3.0, moderate<3.5, high>3.5
 df <- df %>% 
-  mutate(GPA.cat = cut(GPA, breaks=c(-Inf, 2.9999, 3.4999, Inf), 
+  mutate(GPA.cat = cut(GPA, breaks=c(-Inf, 3, 3.5, Inf), 
                        labels=c("low", "moderate", "high")))
 
-#10. Add PartyAnimal and GPA.cat to the dataframe and save to "new_students.csv"
+#10. Add PartyAnimal and GPA.cat to the dataframe and save to "new_students.txt"
 head(df)
-write.csv(Data, file="data/newdata.csv", row.names = TRUE)
+write.csv(df, file="data/new_students.csv", row.names = TRUE)
 
 #11. Suppose we want to focus on students who have low GPAs (below 3.0), party a lot
 #(more than 8 days a month), and study little (less than 15 hours a week). Create a

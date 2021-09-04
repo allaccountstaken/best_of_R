@@ -4,11 +4,28 @@ author: "Dima Mikhaylow"
 date: "9/3/2021"
 output: html_document
 ---
+
+## Load the data
 ```{r}
 library(tidyverse)
-students_df <- read.table("new_students.txt", header = TRUE)
-head(students_df)
+students <- read.csv("new_students.csv", header = TRUE)
+head(students)
 ```
+1. Produce a frequency table of the number of students in each level of `GPA.cat`.
+```{r}
+students$GPA.cat<-factor(students$GPA.cat, levels=c("low", "moderate", "high"))
+table(students$GPA.cat)
+```
+
+2. Produce a bar chart that summarizes the number of students in each level of GPA.cat.
+```{r}
+ggplot(students, aes(x=GPA.cat))+
+  geom_bar()+
+  labs(x="GPA category", y="Number of students",
+        title="Breaksown of students by GPA category")
+```
+
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)

@@ -6,7 +6,7 @@ head(df)
 # 1. Variable that is not a part of any meaningful analysis? 
 #Remove column Student ID or index?
 
-# 2. How many students are there in the dataset? 
+# 2. How many students are there in the dataset?
 # Number of rows is given by the first dimension of dim()
 dim(df)[1]
 

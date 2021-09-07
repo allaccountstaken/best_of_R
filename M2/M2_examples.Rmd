@@ -16,37 +16,46 @@ head(students)
 students$GPA.cat<-factor(students$GPA.cat, levels=c("low", "moderate", "high"))
 table(students$GPA.cat)
 ```
-
-2. Produce a bar chart that summarizes the number of students in each level of GPA.cat.
+##Check:
+2. Produce a bar chart that summarizes the number of students in each level of GPA.cat.Be sure to remove the bar corresponding to the missing values.(?)
 ```{r}
-ggplot(students, aes(x=GPA.cat))+
+ggplot(students[!is.na(students$GPA.cat),], aes(x=GPA.cat))+
   geom_bar()+
   labs(x="GPA category", y="Number of students",
-        title="Breaksown of students by GPA category")
+        title="Students by GPA category")
 ```
 
+3. Create a similar bar chart as you did in part 2, but with proportions instead of counts. Be sure to remove the bar corresponding to the missing values.
+```{r}
 
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+4. Produce a frequency table for the number of female and male students and the GPA
+category.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+5. Produce a table for the percentage of GPA category for each gender. For the percentages, round to 2 decimal places. Comment on the relationship between gender and
+GPA category.
 
-```{r cars}
-summary(cars)
-```
 
-## Including Plots
+6. Create a bar chart to explore the proportion of GPA categories for female and male
+students. Be sure to remove the bar corresponding to the missing values.
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+7. Create a similar bar chart similar to the bar chart in part 6, but split by smoking
+status. Comment on this bar chart.
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+8. Create a scatterplot of GPA against the amount of hours spent studying a week. How
+would you describe the relationship between GPA and amount of time spent studying?
+
+
+9. Edit the scatterplot from part 8 to include information about the number of days the
+student parties in a month.
+
+10. Edit the scatterplot from part 9 to include information about whether the student
+smokes or not.
+
+
+
+

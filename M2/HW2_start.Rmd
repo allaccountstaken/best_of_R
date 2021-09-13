@@ -82,10 +82,10 @@ round(prop.table(table(PoliceKillings$cause))*100, 2)
 
 ```{r}
 ggplot(PoliceKillings, aes(x=raceethnicity, fill=cause))+
-  geom_bar(color='black', position="stack")+
+  geom_bar(color='black', position="fill")+
   theme(axis.text.x=element_text(angle=90),
         plot.title=element_text(hjust=0.5))+
-  labs(x="Race", y="Deaths", title="Causes of deaths by race")
+  labs(x="Race", y="Deaths", title="Causes of death by race")
 ```
 
 #### Observation: from this plot above it does not appear that the cause of death is dependent of the victim’s race / ethnicity. Another stronger conclusion is probably that all groups suffer from gunshot injuries greatly. Also, surprisingly, there are a number of deaths related to tasers, presumably a non-lethal weapon. 

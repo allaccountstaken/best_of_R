@@ -1,9 +1,10 @@
 ---
 title: "Homework2"
-author: "Dima Mikhaylow"
+author: "Dima Mikhaylov"
 date: "9/11/2021"
 output: html_document
 ---
+
 ```{r}
 library(tidyverse)
 ```
@@ -12,6 +13,7 @@ library(tidyverse)
 ```{r}
 PoliceKillings <- read.csv('PoliceKillings.csv', header=TRUE)
 ```
+  
   a. Using the `raceethnicity` variable, create a table and a bar chart that displays
 the proportions of victims in each race / ethnic level. Also, use your table and
 bar chart in conjunction with the US Census Bureau July 1 2019 estimates to
@@ -28,21 +30,19 @@ raceethnicity_prop <- PoliceKillings %>%
   mutate(Percent=Counts/nrow(PoliceKillings))
 
 ggplot(raceethnicity_prop, aes(x=raceethnicity, y=Percent))+
-  geom_bar(fill="blue", color='black', stat="identity")+
+  geom_bar(fill="brown3", color='black', stat="identity")+
   theme(axis.text.x=element_text(angle=90),
         plot.title=element_text(hjust=0.5))+
-  labs(x="Race/Ethnicity", y="Percent of killings", title="Dist of variable `raceethnicity`")
-
+  labs(x="Race/Ethnicity", y="Prop. of killings", title="Dist of variable `raceethnicity`")
 ```
 
-#### Note: it seems noteworthy that Black people, although account for only 13% of the US population, have a relatively high proportion of almost 30%. In contrast, White people account for 76% of the population but only 50% proportion of the killings.
+#### Observation: it seems noteworthy that Black people, although account for only 13% of the US population, have a relatively high proportion of almost 30%. In contrast, White people account for 76% of the population but only 50% proportion of the killings.
 
-
-
-b. Convert the variable age, the age of the victim, to be numeric, and call this
-new variable age.num. Use the is.numeric() function to confirm that the newly
+b. Convert the variable `age`, the age of the victim, to be numeric, and call this
+new variable `age.num`. Use the `is.numeric()` function to confirm that the newly
 created variable is numeric (and output the result), and add this new variable to
 your data frame.
+
 ```{r}
 is.numeric(PoliceKillings$age)
 ```
@@ -51,23 +51,27 @@ PoliceKillings$age.num <- as.numeric(PoliceKillings$age)
 is.numeric(PoliceKillings$age.num)
 ```
 
-c. Create a density plot of the variable age.num. Comment on this density plot.
+c. Create a density plot of the variable `age.num`. Comment on this density plot.
 ```{r}
 ggplot(PoliceKillings, aes(x=age.num))+
-  geom_density()
+  geom_density(fill="darkorange", color='black')+
+  theme(plot.title=element_text(hjust=0.5))+
+  labs(x="Victim' Age", y="Density", title="Probability density of variable `age.num`")
 ```
 
-#### Note: it seems that the density constantly increases for younger victims, picks at around 35 years and declines till 65 years. It is almost flat after 70 years. 
+#### Observation: it seems that the density constantly increases for younger victims, picks at around 35 years and declines till the age of 65 years. The density function is almost flat around zero after 70 years. 
 
 d. Create a visualization to compare the ages of victims across the different race /
 ethnicity levels. Comment on the visualization.
+
 ```{r}
 ggplot(PoliceKillings, aes(x=raceethnicity, y=age.num))+
-  geom_violin()
+  geom_violin(fill="darkorange", color='black')+
+  theme(plot.title=element_text(hjust=0.5))+
+  labs(x="Race/Ethnicity", y="Victim' Age", title="Race specific probability density at different ages")
 ```
 
-
-#### Note: It seems that Asian/Pasific victims tends to be older. In constract, Black and Native America victims tends to be younger. Also, Native American victims appear to be extremely homoginious in terms of age, possibly due to a very small number of killings. 
+#### Observation: it seems that Asian/Pasific victims tend to be older. In constract, Black and Native American victims tend to be younger. Also, Native American victims appear to be extremely homogeneous in terms of age, possibly due to a very small number of observations 
 
 e. Create a visualization to compare the different causes of death (variable cause)
 across the different race / ethnicity levels. Comment on this visualization, specifically on whether the cause of death appears to be independent of the victim’s
@@ -78,14 +82,13 @@ round(prop.table(table(PoliceKillings$cause))*100, 2)
 
 ```{r}
 ggplot(PoliceKillings, aes(x=raceethnicity, fill=cause))+
-  geom_bar(position="stack")+
+  geom_bar(color='black', position="stack")+
   theme(axis.text.x=element_text(angle=90),
         plot.title=element_text(hjust=0.5))+
-  labs(x="Race", y="Deaths", title="Causes of Deaths by Race")
+  labs(x="Race", y="Deaths", title="Causes of deaths by race")
 ```
 
-
-#### Note: from this plot above it really does not appear that the cause of death is dependent of the victim’s race / ethnicity. The much stronger conclusion is probably that all groups suffer from gunshot injuries greatly. Also, surprizingly, there are a number of deaths relates to tasers, a non-leathal weapon. 
+#### Observation: from this plot above it does not appear that the cause of death is dependent of the victim’s race / ethnicity. Another stronger conclusion is probably that all groups suffer from gunshot injuries greatly. Also, surprisingly, there are a number of deaths related to tasers, presumably a non-lethal weapon. 
 
 f. Pick at least two variables from the dataset and create a suitable visualization
 of the variables. Comment on what the visualization reveals. You may create
@@ -98,37 +101,60 @@ round(prop.table(table(PoliceKillings$raceethnicity, PoliceKillings$gender), ) *
 
 ```{r}
 ggplot(PoliceKillings, aes(x=raceethnicity, y=age.num, fill=as.factor(gender)))+
-  geom_boxplot()+
+  geom_boxplot(fcolor='black')+
   theme(axis.text.x=element_text(angle=90),
         plot.title=element_text(hjust=0.5))+
-  labs(x="Race", y="Deaths", title="Age and Gender of Deaths by Race")
+  labs(x="Race", y="Deaths", title="Age and gender of deaths by race")
 ```
 
-#### Note, when splitting by gender, first Fenales are an absolute minority of vistims and second their age distribution largely mimics Males from the same race / ethnicity categories.
-
-
+#### Observation, when splitting by gender, first females (from the table above) constitute an absolute minority of the vistims, and second, their age distribution largely mimics males from the same race / ethnicity categories.
 
 ## Part 2: questions based on `stateCovid.csv` and `State_pop_election.csv`
 
-the name of the state (55 “states”, the 50 states, plus DC, Puerto Rico, Guam,
+The dataset should contain 4 columns:
+• the name of the state (55 “states”, the 50 states, plus DC, Puerto Rico, Guam,
 Northern Mariana Islands, and the Virgin Islands)
 • the number of cases
 • the number of deaths
-1
 • the death rate, defined as the number of deaths divided by the number of cases
 You may realize that when you exported the data file as a .csv file, an extra column
 was added to the dataframe. Remove this column.
+```{r}
+Covid <- read.csv('stateCovid.csv', header=TRUE) #, row.names=1)
+dim(Covid)
+```
+```{r}
+head(Covid)
+```
 
-
-a. There is a dataset on Collab, called State_pop_election.csv. The data contain
+a. There is a dataset on Collab, called `State_pop_election.csv`. The data contain
 the population of the states from the 2020 census (50 states plus DC and Puerto
-Rico), as well as whether the state voted for Biden or Trump in the 2020 presidential elections. Merge these two datasets, stateCovid.csv and State_pop_election.csv.
-Use the head() function to display the first 6 rows after merging these two
+Rico), as well as whether the state voted for Biden or Trump in the 2020 presidential elections. Merge these two datasets, `stateCovid.csv` and `State_pop_election.csv`.
+Use the `head()` function to display the first 6 rows after merging these two
 datasets.
 
+```{r}
+Election <- read.csv('State_pop_election.csv', header=TRUE)
+Merged <- merge( Covid, Election, by.x="state", by.y = "State")
+head(Merged)
+```
 
+```{r}
+dim(Merged)
+```
 
 b. Pick at least two variables from the dataset and create a suitable visualization
 of the variables. Comment on what the visualization reveals. You may create
 new variables based on existing variables, and decribe how you created the new
 variables.
+
+```{r}
+ggplot(Merged[!is.na(Merged$Election),], aes(x=Election, y=state_rate))+
+  geom_boxplot(fill="darkgreen", color='black')+
+  theme(plot.title=element_text(hjust=0.5))+
+  labs(x="Voting preferences", y="State death rate", title="State COVID death rate by election results")
+```
+
+#### Observation: as shown on the boxplot above, distribution of state death rate does vary by aggregate voting preferences, as measured by which candidate, Biden or Trump, prevailed in the last presidential elections. Noteworthy, that the death rate is somewhat higher and much more variant around the mean in sthe tates supporting Biden. Trump supporting states had lower average and much smaller variance, with some large outliers.
+
+

@@ -1,0 +1,119 @@
+---
+title: "LinearRegression"
+author: "Dima Mikhaylow"
+date: "9/14/2021"
+output: html_document
+---
+## Questions:
+#### 4. What is the correlation between body mass and flipper length for Gentoo penguins? N/A? cor()?
+
+
+```{r setup, include=FALSE}
+library(palmerpenguins)
+data(package = 'palmerpenguins')
+head(penguins)
+```
+
+## Simple Linear Regression
+
+We will explore the relationship between the response variable body mass (in grams),
+`body_mass_g`, and the predictor length of the flippers (in mm), `flipper_length_mm`.
+
+1. Produce a scatterplot of the two variables. How would you describe the relationship between the two variables? Be sure to label the axes and give an appropriate title. Based on the appearance of the plot, does a simple linear regression appear reasonable for the data?
+
+```{r}
+ggplot(penguins, aes(x=flipper_length_mm, y=body_mass_g))+
+  geom_point()+
+  labs(x="Flipper length (mm)", y="Body mass (grams)",
+       title="Scatterplot of Body mass against Flipper length")
+```
+
+#### Observation: yes, the data appears to be linear.
+
+2. Produce a similar scatterplot, but with different colored plots for each species. How does this scatterplot influence your answer to the previous part?
+
+```{r}
+ggplot(penguins, aes(x=flipper_length_mm, y=body_mass_g, colour=species))+
+  geom_point()+
+  labs(x="Flipper length (mm)", y="Body mass (grams)",
+       title="Scatterplot of Body mass against Flipper length")
+```
+
+#### Observation: still linear data, with 2 distinct clusters: (Adelie, Chinstrap) and (Gentoo).
+
+3. Regardless of your answer to the previous part, produce a scatterplot of body mass
+and flipper length for Gentoo penguins. Based on the appearance of the plot, does a
+simple linear regression appear reasonable for the data?
+
+
+``` {r}
+ggplot(penguins[which(penguins$species=='Gentoo'), ], aes(x=flipper_length_mm, y=body_mass_g))+
+  geom_point()+
+  labs(x="Flipper length (mm)", y="Body mass (grams)",
+       title="Scatterplot of Body mass against Flipper length for Gentoo only")
+```
+
+#### Observation: yes, linear model may work well, but I am noting significsnat variance in the data now. There may be high residuals. 
+
+4. What is the correlation between body mass and flipper length for Gentoo penguins.
+Interpret this correlation contextually. How reliable is this interpretation?
+For the rest of the questions, assume the assumptions to perform linear regression on
+Gentoo penguins are met.
+
+```{r}
+Gentoo <- penguins[which(penguins$species=='Gentoo'),
+                   c("bill_length_mm", "body_mass_g")]
+cor(Gentoo$bill_length_mm, Gentoo$body_mass_g)
+```
+
+
+5. Use the `lm()` function to fit a linear regression for body mass and flipper length for Gentoo penguins. Write out the estimated linear regression equation.
+
+```{r}
+
+```
+
+6. Interpret the estimated slope contextually.
+
+```{r}
+
+```
+
+7. Does the estimated intercept make sense contextually?
+
+#### Observation: 
+
+8. Report the value of R2 from this linear regression, and interpret its value contextually.
+
+#### Observation:
+
+9. What is the estimated value for the standard deviation of the error terms for this
+regression model, ˆσ?
+
+
+
+10. For a Gentoo penguin which has a flipper length of 220mm, what is its predicted body mass in grams?
+
+#### Observation:
+
+11. Produce the ANOVA table for this linear regression. Using only this table, calculate the value of R2.
+```{r}
+
+````
+
+#### Observation:
+
+
+12. What are the null and alternative hypotheses for the ANOVA F test?
+
+#### Observation:
+
+
+13. Explain how the F statistic of 118.01 is found.
+
+#### Observation:
+
+14. Write an appropriate conclusion for the ANOVA F test for this simple linear regression model.
+
+#### Observation:
+

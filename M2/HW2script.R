@@ -49,7 +49,7 @@ ggplot(PoliceKillings, aes(x=raceethnicity, fill=cause))+
 round(prop.table(table(PoliceKillings$raceethnicity, PoliceKillings$gender), ) *100, 2)
 
 ggplot(PoliceKillings, aes(x=raceethnicity, y=age.num, fill=as.factor(gender)))+
-  geom_boxplot(fcolor='black')+
+  geom_boxplot(color='black')+
   theme(axis.text.x=element_text(angle=90),
         plot.title=element_text(hjust=0.5))+
   labs(x="Race", y="Deaths", title="Age and gender of deaths by race")

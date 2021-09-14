@@ -5,10 +5,11 @@ date: "9/14/2021"
 output: html_document
 ---
 ## Questions:
-#### 4. What is the correlation between body mass and flipper length for Gentoo penguins? N/A? cor()?
+#### 9. Eestimated value for the standard deviation of the error terms????
 
 
 ```{r setup, include=FALSE}
+library(tidyverse)
 library(palmerpenguins)
 data(package = 'palmerpenguins')
 head(penguins)
@@ -61,59 +62,71 @@ For the rest of the questions, assume the assumptions to perform linear regressi
 Gentoo penguins are met.
 
 ```{r}
-Gentoo <- penguins[which(penguins$species=='Gentoo'),
-                   c("bill_length_mm", "body_mass_g")]
-cor(Gentoo$bill_length_mm, Gentoo$body_mass_g)
+Gentoo <- na.omit(penguins[which(penguins$species=='Gentoo'),
+                   c("flipper_length_mm", "body_mass_g")])
+cor(Gentoo$flipper_length_mm, Gentoo$body_mass_g)
 ```
 
+#### Observation: some positive correlation between Mass and Flipper length, as seen on the scatterplot, is confirmed: r=0.70.
 
 5. Use the `lm()` function to fit a linear regression for body mass and flipper length for Gentoo penguins. Write out the estimated linear regression equation.
 
 ```{r}
-
+result <- lm(body_mass_g ~ flipper_length_mm, data=Gentoo)
+summary(result)
 ```
 
 6. Interpret the estimated slope contextually.
 
-```{r}
-
-```
+#### Observation: the slope of 54.62 suggests that for 1 mm increase of Flipper length, there will be app. 55 gram increase in Body mass.
 
 7. Does the estimated intercept make sense contextually?
 
-#### Observation: 
+#### Observation: yes, it does, as bigger birds tend to have longer flippers.
 
 8. Report the value of R2 from this linear regression, and interpret its value contextually.
 
-#### Observation:
+#### Observation: in this case Multiple R-squared is R2 and it is equal to 0.49.
 
 9. What is the estimated value for the standard deviation of the error terms for this
-regression model, ˆσ?
+regression model?
 
-
+#### ?? Residual standard error: 360.2 ??
 
 10. For a Gentoo penguin which has a flipper length of 220mm, what is its predicted body mass in grams?
+
+```{r}
+mass_hat =  -6787.281 + 54.623 * 220
+mass_hat
+```
 
 #### Observation:
 
 11. Produce the ANOVA table for this linear regression. Using only this table, calculate the value of R2.
 ```{r}
+anova.tab <- anova(result)
+anova.tab
+```
 
-````
-
-#### Observation:
-
+``` {r}
+R2 = anova.tab$"Sum Sq"[1] / sum(anova.tab$"Sum Sq")
+R2
+```
+#### Observation: very similar to Multiple R-squared in #8
 
 12. What are the null and alternative hypotheses for the ANOVA F test?
 
-#### Observation:
+#### Observation: ANOVA F-test null hypothesis (H0: B1=0) is that slope is zero, hence no relationship. Alternative is that it is not zero, hence some relationship.
 
 
 13. Explain how the F statistic of 118.01 is found.
+```{r}
+F_stats = anova.tab$"Sum Sq"[1]  / anova.tab$"Mean Sq"[2]  
+```
 
-#### Observation:
+#### Observation: F_stats is Regression Sum of Squares divided by Mean Squared Error.
 
 14. Write an appropriate conclusion for the ANOVA F test for this simple linear regression model.
 
-#### Observation:
+#### Observation: from F test - the probability of observing value greater of equal to 118.01 is less than 0.001. We fail to reject H0 and thus there is not enough evidence to prove that the true slope coefficient B1 is zero.  
 

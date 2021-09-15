@@ -1,0 +1,623 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={HW1},
+  pdfauthor={Dmitry Mikhaylow},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{HW1}
+\author{Dmitry Mikhaylow}
+\date{9/7/2021}
+
+\begin{document}
+\maketitle
+
+Loading and storing COVID data in R:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Covid }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{\textquotesingle{}USCovid.csv\textquotesingle{}}\NormalTok{, }\AttributeTok{header=}\ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(Covid)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         date    county      state  fips cases deaths
+## 1 2020-01-21 Snohomish Washington 53061     1      0
+## 2 2020-01-22 Snohomish Washington 53061     1      0
+## 3 2020-01-23 Snohomish Washington 53061     1      0
+## 4 2020-01-24      Cook   Illinois 17031     1      0
+## 5 2020-01-24 Snohomish Washington 53061     1      0
+## 6 2020-01-25    Orange California  6059     1      0
+\end{verbatim}
+
+\hypertarget{country-level-analysis}{%
+\subsection{1. Country level analysis}\label{country-level-analysis}}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  We are interested in the data at the most recent date, June 3 2021.
+  Create a data frame called \texttt{latest} that:
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  has only rows pertaining to data from June 3 2021:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{latest }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(Covid, date }\SpecialCharTok{==} \StringTok{"2021{-}06{-}03"}\NormalTok{)}
+\FunctionTok{dim}\NormalTok{(latest)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3247    6
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  removes rows pertaining to counties that are ``Unknown''
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{latest }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(latest, latest}\SpecialCharTok{$}\NormalTok{county}\SpecialCharTok{!=}\StringTok{\textquotesingle{}Unknown\textquotesingle{}}\NormalTok{)}
+\FunctionTok{dim}\NormalTok{(latest)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3221    6
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  removes the column \texttt{date} and \texttt{fips}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{latest }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(latest, }\AttributeTok{select=}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(date, fips))}
+\FunctionTok{head}\NormalTok{(latest)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          county   state cases deaths
+## 1381437 Autauga Alabama  7172    111
+## 1381438 Baldwin Alabama 21684    312
+## 1381439 Barbour Alabama  2343     59
+## 1381440    Bibb Alabama  2665     64
+## 1381441  Blount Alabama  6894    139
+## 1381442 Bullock Alabama  1236     42
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Calculate the death rate (call it \texttt{death.rate}) for each
+  county. Report the death rate as a percent and round to two decimal
+  places. Add death.rate as a new column to the data frame latest.
+  Display the first 6 rows of the data frame latest.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{latest}\SpecialCharTok{$}\NormalTok{death.rate }\OtherTok{=} \FunctionTok{round}\NormalTok{((latest}\SpecialCharTok{$}\NormalTok{deaths }\SpecialCharTok{/}\NormalTok{ latest}\SpecialCharTok{$}\NormalTok{cases) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{, }\DecValTok{2}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(latest)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          county   state cases deaths death.rate
+## 1381437 Autauga Alabama  7172    111       1.55
+## 1381438 Baldwin Alabama 21684    312       1.44
+## 1381439 Barbour Alabama  2343     59       2.52
+## 1381440    Bibb Alabama  2665     64       2.40
+## 1381441  Blount Alabama  6894    139       2.02
+## 1381442 Bullock Alabama  1236     42       3.40
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Display the counties with the 10 largest number of cases. Be sure to
+  also display the number of deaths and death rates in these counties,
+  as well as the state the counties belong to.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(latest[}\FunctionTok{order}\NormalTok{(latest}\SpecialCharTok{$}\NormalTok{cases, }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{),], }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                 county      state   cases deaths death.rate
+## 1381641    Los Angeles California 1245127  24375       1.96
+## 1383311  New York City   New York  949986  33257       3.50
+## 1382052           Cook   Illinois  554390  10893       1.96
+## 1381539       Maricopa    Arizona  551509  10084       1.83
+## 1381801     Miami-Dade    Florida  501925   6472       1.29
+## 1384160         Harris      Texas  401345   6462       1.61
+## 1384116         Dallas      Texas  303533   4082       1.34
+## 1381655      Riverside California  300879   4614       1.53
+## 1381658 San Bernardino California  298599   4760       1.59
+## 1381659      San Diego California  280410   3760       1.34
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Display the counties with the 10 largest number of deaths. Be sure to
+  also display the number of cases and death rates in these counties, as
+  well as the state the counties belong to.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(latest[}\FunctionTok{order}\NormalTok{(latest}\SpecialCharTok{$}\NormalTok{deaths, }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{),], }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                 county      state   cases deaths death.rate
+## 1383311  New York City   New York  949986  33257       3.50
+## 1381641    Los Angeles California 1245127  24375       1.96
+## 1382052           Cook   Illinois  554390  10893       1.96
+## 1381539       Maricopa    Arizona  551509  10084       1.83
+## 1381801     Miami-Dade    Florida  501925   6472       1.29
+## 1384160         Harris      Texas  401345   6462       1.61
+## 1381652         Orange California  272242   5070       1.86
+## 1382761          Wayne   Michigan  164612   5048       3.07
+## 1381658 San Bernardino California  298599   4760       1.59
+## 1381655      Riverside California  300879   4614       1.53
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Display the counties with the 10 highest death rates. Be sure to also
+  display the number of cases and deaths in these counties, as well as
+  the state the counties belong to. Is there sometime you notice about
+  these counties?
+\end{enumerate}
+
+\hypertarget{note-death-rates-are-high-but-the-actual-number-of-cases-is-relatively-low}{%
+\paragraph{Note: death rates are high but the actual number of cases is
+relatively
+low:}\label{note-death-rates-are-high-but-the-actual-number-of-cases-is-relatively-low}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(latest[}\FunctionTok{order}\NormalTok{(latest}\SpecialCharTok{$}\NormalTok{death.rate, }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{),], }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##               county      state cases deaths death.rate
+## 1383143        Grant   Nebraska    41      4       9.76
+## 1384261       Sabine      Texas   524     45       8.59
+## 1383084    Petroleum    Montana    12      1       8.33
+## 1383261      Harding New Mexico    12      1       8.33
+## 1384137        Foard      Texas   124     10       8.06
+## 1381896      Hancock    Georgia   928     68       7.33
+## 1381888     Glascock    Georgia   269     19       7.06
+## 1384232       Motley      Texas   116      8       6.90
+## 1381847      Candler    Georgia   978     67       6.85
+## 1384283 Throckmorton      Texas    73      5       6.85
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  Display the counties with the 10 highest death rates among counties
+  with at least 100,000 cases. Be sure to also display the number of
+  cases and deaths in these counties, as well as the state the counties
+  belong to.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(latest[}\FunctionTok{order}\NormalTok{(}\FunctionTok{c}\NormalTok{(latest}\SpecialCharTok{$}\NormalTok{cases, latest}\SpecialCharTok{$}\NormalTok{death.rate), }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{),], }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                 county      state   cases deaths death.rate
+## 1381641    Los Angeles California 1245127  24375       1.96
+## 1383311  New York City   New York  949986  33257       3.50
+## 1382052           Cook   Illinois  554390  10893       1.96
+## 1381539       Maricopa    Arizona  551509  10084       1.83
+## 1381801     Miami-Dade    Florida  501925   6472       1.29
+## 1384160         Harris      Texas  401345   6462       1.61
+## 1384116         Dallas      Texas  303533   4082       1.34
+## 1381655      Riverside California  300879   4614       1.53
+## 1381658 San Bernardino California  298599   4760       1.59
+## 1381659      San Diego California  280410   3760       1.34
+\end{verbatim}
+
+Another way to do the same:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(latest[}\FunctionTok{order}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{latest}\SpecialCharTok{$}\NormalTok{cases, latest}\SpecialCharTok{$}\NormalTok{death.rate), ], }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                 county      state   cases deaths death.rate
+## 1381641    Los Angeles California 1245127  24375       1.96
+## 1383311  New York City   New York  949986  33257       3.50
+## 1382052           Cook   Illinois  554390  10893       1.96
+## 1381539       Maricopa    Arizona  551509  10084       1.83
+## 1381801     Miami-Dade    Florida  501925   6472       1.29
+## 1384160         Harris      Texas  401345   6462       1.61
+## 1384116         Dallas      Texas  303533   4082       1.34
+## 1381655      Riverside California  300879   4614       1.53
+## 1381658 San Bernardino California  298599   4760       1.59
+## 1381659      San Diego California  280410   3760       1.34
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  Display the number of cases, deaths, death rate for the following
+  counties:
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Albemarle, Virginia
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{latest[}\FunctionTok{which}\NormalTok{(latest}\SpecialCharTok{$}\NormalTok{county}\SpecialCharTok{==}\StringTok{"Albemarle"}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         cases deaths death.rate
+## 1384363  5801     83       1.43
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  Charlottesville city, Virginia
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{latest[}\FunctionTok{which}\NormalTok{(latest}\SpecialCharTok{$}\NormalTok{county}\SpecialCharTok{==}\StringTok{"Charlottesville city"}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         cases deaths death.rate
+## 1384385  4014     57       1.42
+\end{verbatim}
+
+\hypertarget{state-level-analysis}{%
+\subsection{2. State level analysis}\label{state-level-analysis}}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  We are interested in the data at the most recent date, June 3 2021.
+  Create a data frame called state.level that:
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{state.level }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(Covid, date }\SpecialCharTok{==} \StringTok{"2021{-}06{-}03"}\NormalTok{)}
+\NormalTok{state.level }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(state.level, }\AttributeTok{select=}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(date, county, fips))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  has 55 rows: 1 for each state, DC, and territory
+\item
+  has 3 columns: name of the state, number of cases, number of deaths
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dim}\NormalTok{(state.level)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3247    3
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  is ordered alphabetically by name of the state
+\item
+  Display the first 6 rows of the data frame state.level.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{state.level }\OtherTok{\textless{}{-}} \FunctionTok{aggregate}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(cases, deaths)}\SpecialCharTok{\textasciitilde{}}\NormalTok{state, }\AttributeTok{data=}\NormalTok{state.level, }\AttributeTok{FUN=}\NormalTok{sum)}
+\FunctionTok{head}\NormalTok{(state.level)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        state   cases deaths
+## 1    Alabama  545028  11188
+## 2     Alaska   69826    352
+## 3    Arizona  882691  17653
+## 4   Arkansas  341889   5842
+## 5 California 3793055  63345
+## 6   Colorado  547961   6746
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Calculate the death rate (call it state.rate) for each state. Report
+  the death rate as a percent and round to two decimal places. Add
+  state.rate as a new column to the data frame state.level. Display the
+  first 6 rows of the data frame state.level.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{state.level}\SpecialCharTok{$}\NormalTok{state\_rate }\OtherTok{=} \FunctionTok{round}\NormalTok{((state.level}\SpecialCharTok{$}\NormalTok{deaths}\SpecialCharTok{/}\NormalTok{ state.level}\SpecialCharTok{$}\NormalTok{cases) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{, }\DecValTok{2}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(state.level)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        state   cases deaths state_rate
+## 1    Alabama  545028  11188       2.05
+## 2     Alaska   69826    352       0.50
+## 3    Arizona  882691  17653       2.00
+## 4   Arkansas  341889   5842       1.71
+## 5 California 3793055  63345       1.67
+## 6   Colorado  547961   6746       1.23
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  What is the death rate in Virginia?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{state.level[}\FunctionTok{which}\NormalTok{(state.level}\SpecialCharTok{$}\NormalTok{state}\SpecialCharTok{==}\StringTok{"Virginia"}\NormalTok{), }\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{4}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       state state_rate
+## 51 Virginia       1.66
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  What is the death rate in Puerto Rico?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{state.level[}\FunctionTok{which}\NormalTok{(state.level}\SpecialCharTok{$}\NormalTok{state}\SpecialCharTok{==}\StringTok{"Puerto Rico"}\NormalTok{), ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          state cases deaths state_rate
+## 42 Puerto Rico  5589   2512      44.95
+\end{verbatim}
+
+\hypertarget{note-pr-has-extrememly-high-state.rate-due-to-low-number-of-reported-cases.}{%
+\paragraph{Note: PR has extrememly high state.rate due to low number of
+reported
+cases.}\label{note-pr-has-extrememly-high-state.rate-due-to-low-number-of-reported-cases.}}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Which states have the 10 highest death rates?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(state.level[}\FunctionTok{order}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{state.level}\SpecialCharTok{$}\NormalTok{state\_rate), ], }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                   state   cases deaths state_rate
+## 42          Puerto Rico    5589   2512      44.95
+## 32           New Jersey 1017044  26253       2.58
+## 23        Massachusetts  707523  17893       2.53
+## 34             New York 2102003  52811       2.51
+## 7           Connecticut  347748   8245       2.37
+## 9  District of Columbia   49041   1136       2.32
+## 26          Mississippi  318048   7324       2.30
+## 41         Pennsylvania 1208879  27349       2.26
+## 20            Louisiana  472617  10605       2.24
+## 33           New Mexico  203330   4275       2.10
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  Which states have the 10 lowest death rates?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(state.level[}\FunctionTok{order}\NormalTok{(state.level}\SpecialCharTok{$}\NormalTok{state\_rate), ], }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                       state  cases deaths state_rate
+## 2                    Alaska  69826    352       0.50
+## 48                     Utah 406895   2308       0.57
+## 50           Virgin Islands   3512     28       0.80
+## 49                  Vermont  24240    255       1.05
+## 29                 Nebraska 223517   2385       1.07
+## 14                    Idaho 192704   2103       1.09
+## 37 Northern Mariana Islands    183      2       1.09
+## 54                Wisconsin 675152   7923       1.17
+## 55                  Wyoming  60543    720       1.19
+## 6                  Colorado 547961   6746       1.23
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  Export this dataset as a .csv file named stateCovid.csv.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{write.csv}\NormalTok{(state.level, }\StringTok{\textquotesingle{}stateCovid.csv\textquotesingle{}}\NormalTok{, }\AttributeTok{row.names =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}

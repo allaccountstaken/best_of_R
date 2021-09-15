@@ -1,0 +1,232 @@
+---
+title: "Homework 0"
+author: "Dima Mikhaylow"
+date: "8/25/2021"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+## Topic A.2
+1. Sampling
+  + a. mu, sigma/sqrt(n)
+  + b. The Central Limit Theorem
+  
+2. Manufacturing process with mean=116 and std=4.8
+  + a. For one subcomponent of length 118
+  ```{r}
+  1 - pnorm((118-116)/4.8)
+  ```
+  + b. For the sample mean of 3 subcomponents:
+  ``` {r}
+  1 - pnorm((118-116)/(4.8/sqrt(3)))
+  ```
+  
+## Topic A.3 -- Confidence Intervals
+3. The goals of constructing confidence intervals (Etimates +/- Margin of Error, where Confidence Level C = 1 - a(significance level), another way to state this Estimates +/- Multiplier(1-a/2)*Standard Error of Estimate(s/sqrt(n)):
+  * Provide an estimate for the unknown parameter of interest;
+  * Provide a range of plausible values for the unkonw parameter;
+  * Provide a measure of uncertainty.
+  
+4. Increasing confidence level ...
+  * The multiplier increases in magnitude, thus 
+  * The margin of error is also increasing
+
+5. Increasing sample size...
+  * Decreases the standard error of sample mean and thus 
+  * Margin of error and confidence interval go down (decrease)
+  
+6. Computing t-multiplier for the mean with given confidence intervals: 
+  a. CI = 94%, n = 49
+```{r}
+qt(1-((1-0.94)/2), 49-1)
+```
+  b. CI = 86%, n = 82
+```{r}
+qt(1-((1-0.86)/2), 82-1)
+```
+  c. CI = 74%, n = 150
+```{r}
+qt(1-((1-0.74)/2), 150-1)
+```
+
+
+7. Random sample of 100 students had mean GPA of 3.2 with std of 0.2.
+  a. Calculate 97% confidence interval for the mean GPA. Firts, t-multiplier is given by qt() function:
+```{r}
+t = qt((1-(1-0.97)/2), 99)
+upper = 3.2 + t*(0.2/sqrt(100))
+lower = 3.2 - t*(0.2/sqrt(100))
+print(paste("Lower:", lower, "Upper:", upper))
+```
+  b. Margin of Error (ME) can be found by using t-multiple and standard error or the mean. ME shows how far the sample mean will be away from the true population mean in 97% of random samples of 100 students.
+```{r}
+ME = t * (0.2/sqrt(100))
+print(paste("ME =", ME))
+```
+  c. No, the mean of 3.25 is not a reasonable estimate, because this value is outside the confidence interval.
+
+## Topic A.4 -- Hypothesis Testing 
+8. The goal is to see if an observed estimate is due to random variation in the data or is in fact a true feature of the phenomenon. Typically H0 is a statement of no effect or no difference. It is also known as statement of equlity H0: mu = 1. Write the alternative Ha as a statement you are actually trying to show, Ha: mu < 1.
+
+9. Hypothesis should be written about an unobservant population parameter. It is evaluated (rejected or failed to reject) by checking observable sample statistics. Start by assuming that H0 is true, compute the test statistics, and check if the difference can be explained by random variation. If not => reject H0 and accept alternative Ha.
+  * The test statistics basically measures how different our sampled data is from H0.
+  * The larger the test statistic is (t-stat), the more evidence we have agains the H0.
+  * Formula (X-mu) / (sigma/sqrt(n)).
+  * Multiplied by significance level, i.e. probability of rejecting H0 when H0 is actually true (False positive).
+  * There are two approached:
+    * P-value - reject the H0 when p-value is smaller than significance level alpha.
+    * 
+
+10. Drafting hypothesis statements:
+  + a. H0(avgMPG == 29 m/g), Ha(avgMPG > 29 m/g), reject H0 => gas mileage improved
+  + b. H0(Dimameter == 4 mil), Ha(Diameter != 4 mil), two-sided test as both are bad
+  + c. H0(avgTime == 2 hours), Ha(acgTime < 2 hours), travel time improved
+
+11. Larger test statistic gives more evidence against the H0, as it is more unlikely that the observed value is due to a random variation.It shows how dissimilar the sample is from H0. The bigger the magnitude, the more dissimilar the sample is.
+
+12. Increasing the difference between the sample mean and the population mean, increases the test statistics producing stronger evidence to reject H0.
+
+13. Increasing sample size increases the magnitude of test statistic and thus produces more evidence against H0.
+
+14. Critical values for t:
+  + a. Two sided => use a/2 => 1.77
+```{r}
+qt(1-(0.08/2), 95)
+```
+  + b.  One sided => use a => 1.19
+```{r}
+qt(1-0.12, 42)
+```
+  + c. One sided => use a => 1.71
+``` {r}
+qt(1-0.045, 132)
+```
+
+15. Alternative approach is to obtain p-values:
+
+  + a. H0 : µ = 48, Ha : µ 6= 48, with t − stat = 2.14 and n = 50.
+```{r}
+pt(-2.14, 49) * 2
+```
+  + b. H0 : µ = 3, Ha : µ > 3, with t − stat = 0.78 and n = 316.
+```{r}
+1-pt(0.78, 315)
+```
+  + c. H0 : µ = 12, Ha : µ < 12, with t − stat = 1.57 and n = 34.
+```{r}
+pt(1.57, 33)
+```
+
+16. Historical corn yield - hypothesis testing:
+  
+  + a. H0: mu = 160, Ha: mu < 160
+  + b. Test statistic of 2.26 is given by the following:
+```{r}
+(160-158.4)/(5/sqrt(50))
+```
+  + c. P-value of 0.01 is very small and critical values of 1.67 is given by the following:
+  ``` {r}
+  1 - pt(2.2627, 49)
+  qt(0.95, 49)
+  ```
+  + d. Since the p-value is smaller than 0.05 and sicne critical value of 1.67 is smaller than the test statistic of 2.26, we reject the H0. The data support teh claim that the average yield this year is less than long-term yield of 160 bushels per acre. 
+  + e. If the average yield is 160, the probability of obtaining a sample of 50 farms with average yield of 158.4 will be only 1.4%, much smaller than the desired significance level of 5%.
+
+## General Questions
+
+17. Obtain the critical value of a hypothesis test
+```{r}
+qt(1-(0.02/2), 49)
+```
+
+18. Obtain the t-multiplier for a 98% confidence interval
+```{r}
+qt(0.99, 49)
+```
+
+19. Compare the critical value and the t-multiplier found in the previous 2 parts. -- They are the same, hence conclusions from a 2-sided test at significance level alpha will be consistent with (1-alpha)x100% confidence interval.
+
+20. Suppose the hypothesis test in part 17 is carried out and the p-value is 0.043. Which
+of the following confidence intervals is/are possible? -- Only (144.5, 163,5) is possible. At α = 0.02, we fail to reject the null hypothesis. So
+the null value of 145 will be inside the corresponding 98% confidence interval.
+
+21. A random sample of 85 banded archerfish were collected, and their lengths were measured and recorded. Their average length was 20cm with a standard deviation of 3cm.
+  
+  + a. [19.35291, 20.64709]
+```{r}
+se = 3/sqrt(85)
+mult = qt(0.975, 84)
+20 + mult*se
+20 - mult*se
+```
+  + b. Not likely as 21 is outside the confidence interval
+  + c. H0: mu=21, Ha: mu != 21
+    * P-value will be less than 0.05
+  + d. Compare the magnitude of test statistic of 1.99 and critical value of 1.988. P-value is smaller than 0.05 and magnitude of test statistic is greater than critical value:
+```{r}
+2*pt(-((20-21)/(3/sqrt(85))), 84)
+qt(0.975, 84)
+```
+
+## Topic B.2
+1. Load cars
+  + a. `cars.df` created 
+  + b. 32 obs. of 11 variables
+
+2. Load students
+  + a. `students.df` created
+  + b. 250 obs. of 9 variables
+  
+3. Libraries installed successfully 
+
+4. Load `faraway` package
+  + a. `corn.df` created
+  + b. 44 obs. of 2 variables
+
+## Topic B.3
+5. The following names are not valied in R:`.2020.Age`, `#Courses.2020`, `1_courses_2020`, and `age(2020)`.
+
+#### Notes on Names
+There are only a few rules regarding naming objects in R:
+* It must begin with a letter or .
+* If it begins with ., then . cannot be followed by a number
+* Only letters, numbers, ., and _ can be used 
+
+6. Create a vector
+```{r}
+practice = c(13, 91, 36, 95, 9, 3, 61, 20, 22, 91)
+class(practice)
+```
+
+7. Logical tests
+```{r}
+practice[5] != 10
+(practice[1] + practice[2]) < 104
+(practice[1] + practice[2]) <= 104
+(practice[2]==91) & (practice[9]==22)
+(practice[5] < 9) | (practice[6] >= 4)
+```
+
+8. Creating and operating on a matrix
+``` {r}
+Mat.A = matrix(data=c(4, 6, 1, 2, 3, 1), nrow=2, ncol=3)
+```
+
+```{r}
+names(Mat.A) <- c("Huey", "Dewey", "Loie")
+```
+
+```{r}
+Mat.A[2, 1]
+dim(Mat.A)
+
+```
+
+9. Order of levels in the factor:
+```{r}
+factor(practice)
+```
+
+## Topic B.4
+Done!

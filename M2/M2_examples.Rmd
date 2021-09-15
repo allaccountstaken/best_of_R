@@ -1,0 +1,80 @@
+---
+title: "Examples M2"
+author: "Dima Mikhaylow"
+date: "9/7/2021"
+output: html_document
+---
+
+## Load the data
+```{r}
+library(tidyverse)
+students <- read.csv("new_students.csv", header = TRUE)
+head(students)
+```
+1. Produce a frequency table of the number of students in each level of `GPA.cat`.
+```{r}
+students$GPA.cat<-factor(students$GPA.cat, levels=c("low", "moderate", "high"))
+table(students$GPA.cat)
+```
+##Check:
+2. Produce a bar chart that summarizes the number of students in each level of GPA.cat.Be sure to remove the bar corresponding to the missing values.(?)
+```{r}
+ggplot(students[!is.na(students$GPA.cat),], aes(x=GPA.cat))+
+  geom_bar(fill="blue", color="black")+
+  theme(axis.text.x=element_text(angle=90),
+        plot.title=element_text(hjust=0.5))+
+  labs(x="GPA category", y="Number of students",
+        title="Students by GPA category")
+```
+
+3. Create a similar bar chart as you did in part 2, but with proportions instead of counts. Be sure to remove the bar corresponding to the missing values.
+```{r}
+students_prop <- students[!is.na(students$GPA.cat),]%>%
+  group_by(GPA.cat)%>%
+  summarise(Counts=n())%>%
+  mutate(Percent=Counts/nrow(students[!is.na(students$GPA.cat),]))
+
+ggplot(students_prop, aes(x=GPA.cat, y=Percent))+
+  geom_bar(fill="blue", color='black', stat="identity")+
+  theme(axis.text.x=element_text(angle=90),
+        plot.title=element_text(hjust=0.5))+
+  labs(x="GPA category", y="Percent of Students", title="Dist of Categories")
+```
+
+4. Produce a frequency table for the number of female and male students and the GPA category.
+```{r}
+table(students$Gender, students$GPA.cat)
+```
+
+5. Produce a table for the percentage of GPA category for each gender. For the percentages, round to 2 decimal places. Comment on the relationship between gender and
+GPA category.
+```{r}
+prop.table(students$Gender, students$GPA.cat)
+```
+
+6. Create a bar chart to explore the proportion of GPA categories for female and male students. Be sure to remove the bar corresponding to the missing values.
+
+
+7. Create a similar bar chart similar to the bar chart in part 6, but split by smoking status. Comment on this bar chart.
+
+
+8. Create a scatterplot of GPA against the amount of hours spent studying a week. How would you describe the relationship between GPA and amount of time spent studying?
+```{r}
+ggplot(students, aes(x=GPA, y=StudyHrs))+
+  geom_point()
+```
+
+9. Edit the scatterplot from part 8 to include information about the number of days the student parties in a month.
+```{r}
+ggplot(students, aes(x=GPA, y=StudyHrs, size=PartyNum))+
+  geom_point(shape=21, alpha=0.5)+
+  scale_size(range = c(0.1,5))
+```
+
+10. Edit the scatterplot from part 9 to include information about whether the student smokes or not.
+```{r}
+ggplot(students, aes(x=GPA, y=StudyHrs, size=PartyNum, fill=Smoke))+
+  geom_point(shape=21, alpha=0.5)+
+  scale_size(range = c(0.1,5))
+```
+

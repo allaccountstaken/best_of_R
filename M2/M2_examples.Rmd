@@ -43,13 +43,13 @@ ggplot(students_prop, aes(x=GPA.cat, y=Percent))+
 
 4. Produce a frequency table for the number of female and male students and the GPA category.
 ```{r}
-table(students$Gender, students$GPA.cat)
+table(students$GPA.cat, students$Gender)
 ```
 
 5. Produce a table for the percentage of GPA category for each gender. For the percentages, round to 2 decimal places. Comment on the relationship between gender and
 GPA category.
 ```{r}
-prop.table(students$Gender, students$GPA.cat)
+round(prop.table(table(students$GPA.cat, students$Gender), 1) * 100, 2)
 ```
 
 6. Create a bar chart to explore the proportion of GPA categories for female and male students. Be sure to remove the bar corresponding to the missing values.

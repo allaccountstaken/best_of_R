@@ -80,7 +80,7 @@ summary(result)
 
 7. Does the estimated intercept make sense contextually?
 
-#### Observation: yes, it does, as bigger birds tend to have longer flippers.
+#### Observation: negative intercept means no x=0.For slope it is much more usefully, as bigger birds tend to have longer flippers.
 
 8. Report the value of R2 from this linear regression, and interpret its value contextually.
 

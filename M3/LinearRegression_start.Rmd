@@ -4,8 +4,6 @@ author: "Dima Mikhaylow"
 date: "9/14/2021"
 output: html_document
 ---
-## Questions:
-#### 9. Eestimated value for the standard deviation of the error terms????
 
 
 ```{r setup, include=FALSE}
@@ -91,7 +89,7 @@ summary(result)
 9. What is the estimated value for the standard deviation of the error terms for this
 regression model?
 
-#### ?? Residual standard error: 360.2 ??
+#### Residual standard error: 360.2
 
 10. For a Gentoo penguin which has a flipper length of 220mm, what is its predicted body mass in grams?
 

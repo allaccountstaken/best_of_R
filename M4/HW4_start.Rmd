@@ -98,15 +98,40 @@ anova.tab[2,3]
 a. Carry out a hypothesis test to assess if there is a linear relationship between the
 variables of interest..
 
-## Comment: this requires checking if B1 (slope) is statistically different from zero. H0 will be B1=0 and then Ha: B1 != 0 (not zero). If H0 is true than the value of F statistics, i.e Regression Sum of Squares divided by Mean Squared Error, will be close to 1. How close to 1 is 160/2.2 = 72.7? It is very much different, so H0 is likely fallse, and B1 is in fact different from zero, hence there is a liner relationship between the variables of interest.
+## Comment: this requires checking if B1 (slope) is statistically different from zero. H0 will be B1=0 and then Ha: B1 != 0 (not zero). If H0 is true than the value of F statistics, i.e Regression Sum of Squares divided by Mean Squared Error, will be close to 1. How close to 1 is 160/2.2 = 72.7? It is very much different, so H0 is likely false, and the slope B1 is in fact different from zero, hence there is a liner relationship between the variables of interest.
 
 ```{r}
 1 - pt(160/2.2, 8)
 ```
+## Alternatively, t-test for the slop shoud give the same result as F statistics. Check if B1 is not different from zero: t_stat = (B1_hat-0)/se_of_B1_hat. 
 
+Decision criterion:
+
+* Critical region: reject H0 at level of significance of alpha if 
+|t| > t_(1-alpha/2; n-2)
+
+```{r}
+a = 0.05
+n = 10
+df = n-2 
+qt(1-a/2, df)
+```
+
+Checking (B1-0) / se_B1, also squring this value should be eaual to F-stat:
+
+```{r}
+((4-0)/0.469) ** 2
+```
+
+
+* P-value approach: the two-sided p-value is 2*P{t_(n-2) > |t|}. If p-value is less than alpha, reject H0.
+
+NOTE: rejecting H0 indicates out data support Ha!
 
 b. Calculate a 95% confidence interval that estimates the unknown value of the
 population slope.
+
+## Comment: use statistics+/-(multiplier * s.e. of statistics)
 
 
 c. A consultant believes the mean number of broken ampules when no transfers
@@ -114,10 +139,23 @@ are made is different from 9. Conduct an appropriate hypothesis test (state the
 hypotheses statements, calculate the test statistic, and write the corresponding
 conclusion in context, in response to his belief).
 
+## Comment: H0: B0 = 9 ??? the mean number of broken ampules is not different 9, and Ha: B0 != 9, the mean number is actually different. To test this, t_stat = (B0_hat - B()/ se_B0_hat
 
-d. Calculate a 95% confidence interval for the mean number of broken ampules and
-a 95% prediction interval for the number of broken ampules when the number of
-transfers is 2.
+```{r}
+(10.2-9) / 0.6633
+```
+
+Compared to critical t:
+
+```{r}
+qt(1-a/2, df)
+```
+
+
+
+
+
+d. Calculate a 95% confidence interval for the mean number of broken ampules and a 95% prediction interval for the number of broken ampules when the number of transfers is 2.
 
 
 e. What happens to the intervals from the previous part when the number of transfers is 1? (Describe what happens without calculating).
@@ -132,7 +170,7 @@ g. Calculate the value of R2, and interpret this value in context.
 160/(160+17.6)
 ```
 
-## Comment: R2 is large, more than 90% of variance in Y was explained by x.
+## Comment: R2 is close to one. It implies that the model is probably good hence  more than 90% of variance in Y was explained by the regression.
 
 
 ----
@@ -141,6 +179,10 @@ g. Calculate the value of R2, and interpret this value in context.
 
 a. Describe how the straight line would look in a plot of y versus x.
 
+## I think it will look like a staight line from y=B0 (intercept) parallel to x.
+
 b. Explain why a slope that is equal to 0 would indicate that y and x are not linearly
 related, and why a slope that is not equal to 0 would indicate that y and x are
 linearly related.
+
+

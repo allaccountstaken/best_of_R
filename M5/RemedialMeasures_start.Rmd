@@ -28,6 +28,7 @@ ggplot(mammals, aes(x=body, y=brain))+
 ```
 
 ### Comment on appearance of the plot: 2 influencial observations on the far right may cause a problem when fitting the least squares regression line. It is not 100% obvious if assumptions of SLR were actually violated. Several observations:
+
 * General pattern may be assumed linear, NOT the last 2 observations;
 * Data points are NOT evenly scattered around OLS line;
 * Vertical variation of data points is NOT constant.
@@ -47,10 +48,30 @@ ggplot(mammals, aes(x=body, y=brain))+
 
 3. Based on your answers to parts 1 and 2, do we need to transform at least one of the variables? Briefly explain.
 
+### * Yes, at least one, variance is increasing => to remedy non-constant variance (problem #2) -- errors need to be i.i.d. On scatterplot this should result in residuals 1) being randomly scattered, 2) not displaying any pattern (mean 0), and 3) spread of residuals for each fitted value of x should be constant (constant variance)
+
+### * Transforming the response variable is used to mitigate non-constant variable (problem #2), so taking a log of y may help. This could also potentially help imporove issues with non-zero mean (problem #1).
+
 
 4. For the simple linear regression in part 2, create a Box Cox plot. What transformation, if any, would you apply to the response variable? Briefly explain.
 
+### * Log transformation of the response variable is used to remedy non-constant variance.
 
+```{r}
+result = lm(brain ~ body, data=mammals)
+y_hat <- result$fitted.values
+res <- result$residuals
+mammals <- data.frame(mammals, y_hat, res)
+
+ggplot(mammals, aes(x=y_hat, y=res))+
+  geom_point()+
+  geom_hline(yintercept = 0, color='red')+
+  labs(x="Fitted y", y="Residuals", title= "Residual plot")
+```
+
+```{r}
+boxcox(result)
+```
 
 5. Apply the transformation you specified in part 4, and let y∗ denote the transformed response variable. Create a scatterplot of y∗ against x. Comment on the appearance of the plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones?
 
@@ -60,21 +81,32 @@ ggplot(mammals, aes(x=body, y=brain))+
 
 
 
+
+
 7. Do we need to transform the x variable? If yes, what transformation(s) would you try? ∗∗
 Briefly explain. Create a scatterplot of y against x . Do any assumptions for simple linear regression appear to be violated? If so, which ones?
+
+
 
 
 
 8. Fit a simple linear regression to y∗ against x∗, and create the corresponding residual plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones? If the assumptions are not met, repeat with a different transformation on the predictor until you are satisfied.
 
 
+
+
 9. Create an ACF plot of the residuals. Comment if assumptions are met for linear regression.
+
+
 
 
 10. Create a QQ plot of the residuals. Comment if assumptions are met for linear regres- sion.
 
 
+
+
 11. Write out the regression equation, and if possible, interpret the slope of the regression.
+
 
 
 

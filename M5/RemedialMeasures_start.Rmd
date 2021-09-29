@@ -66,16 +66,36 @@ mammals <- data.frame(mammals, y_hat, res)
 ggplot(mammals, aes(x=y_hat, y=res))+
   geom_point()+
   geom_hline(yintercept = 0, color='red')+
-  labs(x="Fitted y", y="Residuals", title= "Residual plot")
+  labs(x="Fitted y", y="Residuals", title= "Residual plot before y transformation")
 ```
 
 ```{r}
 boxcox(result)
 ```
 
+```{r}
+boxcox(result, lambda = seq(-0.1, 0.4, 1/10) )
+```
+
+### From Box Cox above, lambda of 0.08 seems like an optimal choice, for siplification purposes can try lambda=0.1 as well.
+
+
 5. Apply the transformation you specified in part 4, and let y∗ denote the transformed response variable. Create a scatterplot of y∗ against x. Comment on the appearance of the plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones?
 
+```{r}
+y_star <- (mammals$brain)^0.01
+mammals <- data.frame(mammals, y_star)
+result.y_star <- lm(y_star ~ body, data=mammals)
 
+y_hat2 <- result.y_star$fitted.values
+res2 <- result.y_star$residuals
+
+ggplot(mammals, aes(x=y_hat2, y=res2))+
+  geom_point()+
+  geom_hline(yintercept = 0, color='red')+
+  labs(x="Fitted y", y="Residuals", title= "Residual plot after y transformation")
+
+```
 
 6. Fit a simple linear regression to y∗ against x, and create the corresponding residual plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones?
 

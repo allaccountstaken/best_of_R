@@ -74,6 +74,7 @@ result <- lm(body_mass_g ~ flipper_length_mm, data=Gentoo)
 summary(result)
 ```
 
+
 6. Interpret the estimated slope contextually.
 
 #### Observation: the slope of 54.62 suggests that for 1 mm increase of Flipper length, there will be app. 55 gram increase in Body mass.

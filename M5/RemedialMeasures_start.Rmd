@@ -1,0 +1,79 @@
+---
+title: "Remedial Measures"
+author: "Dima Mikhaylov"
+date: "9/29/2021"
+output: html_document
+---
+
+## Mammals dataset
+
+The data set mammals from the MASS package contains the average brain and body weights for 62 species of land mammals. We wish to see how body weight (x) could explain the brain weight (y) of land mammals.
+
+```{}
+library(MASS)
+data(package = 'mammals')
+head(mammals)
+```
+
+
+1. Create a scatter plot of brain weight against body weight of land mammals. Comment on the appearance of the plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones?
+
+```{r}
+library(tidyverse)
+ggplot(mammals, aes(x=body, y=brain))+
+  geom_point()+
+  labs(x="Average body weight", y="Average brain weight",
+       title="Scatter plot of brain weight against body weight of land mammals")
+      
+```
+
+### Comment on appearance of the plot: 2 influencial observations on the far right may cause a problem when fitting the least squares regression line. However, it is not obvious if assumptions of SLR were actually violated. 
+
+
+2. Fit a simple linear regression to the data, and create the corresponding residual plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones?
+
+```{r}
+result = lm(brain ~ body, data=mammals)
+summary(result)
+```
+
+
+3. Based on your answers to parts 1 and 2, do we need to transform at least one of the variables? Briefly explain.
+
+
+4. For the simple linear regression in part 2, create a Box Cox plot. What transformation, if any, would you apply to the response variable? Briefly explain.
+
+
+
+5. Apply the transformation you specified in part 4, and let y∗ denote the transformed response variable. Create a scatterplot of y∗ against x. Comment on the appearance of the plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones?
+
+
+
+6. Fit a simple linear regression to y∗ against x, and create the corresponding residual plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones?
+
+
+
+7. Do we need to transform the x variable? If yes, what transformation(s) would you try? ∗∗
+Briefly explain. Create a scatterplot of y against x . Do any assumptions for simple linear regression appear to be violated? If so, which ones?
+
+
+
+8. Fit a simple linear regression to y∗ against x∗, and create the corresponding residual plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones? If the assumptions are not met, repeat with a different transformation on the predictor until you are satisfied.
+
+
+9. Create an ACF plot of the residuals. Comment if assumptions are met for linear regression.
+
+
+10. Create a QQ plot of the residuals. Comment if assumptions are met for linear regres- sion.
+
+
+11. Write out the regression equation, and if possible, interpret the slope of the regression.
+
+
+
+
+
+
+
+
+

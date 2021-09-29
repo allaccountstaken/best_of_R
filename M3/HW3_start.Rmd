@@ -62,5 +62,7 @@ anova.tab <- anova(result)
 anova.tab
 ```
 
+
+
 #### Notes
 F statistic is 968.7 and statistically significant. ANOVA F-test null hypothesis (H0: B1=0) is that slope is zero, hence no relationship. Alternative is that the slope is not zero, hence some relationship. Conclusion is that we have to reject H0 and accept alternative, hence the slope B1 is probably not zero.

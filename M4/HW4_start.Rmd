@@ -8,6 +8,7 @@ output: html_document
 
 # 1. Questions based on “Copier.txt” dataset.
 
+
 ```{r}
 Data = read.table("copier.txt", header=TRUE)
 head(Data)
@@ -19,6 +20,7 @@ using the number of copiers serviced. Fit an appropriate linear regression and a
 ```{r}
 result <- lm(Minutes ~ Serviced, data=Data)
 ```
+
 
 a.  Produce an appropriate scatterplot and comment on the relationship between the
 total time spent by the service person and the number of copiers serviced.
@@ -33,36 +35,49 @@ ggplot(Data, aes(x=Serviced, y=Minutes))+
        title="Scatterplot of time spent and number of serviced devices")
 
 ```
-## Comment: there seems to be a linear relationship between the variables, as the time spent tends to increase with the number of serviced devices.
 
-b. What is the correlation between the total time spent by the service person and
-the number of copiers serviced? Interpret this correlation contextually.
+
+### Comment: there seems to be a linear relationship between the variables, as the time spent tends to increase with the number of serviced devices.
+
+
+b. What is the correlation between the total time spent by the service person and the number of copiers serviced? Interpret this correlation contextually.
 
 ```{r}
 cor(Data$Minutes, Data$Serviced)
 ```
 
-## Comment: correlation of 0.97 supports the possibility of a linear relationship between the variables. Positive sign indicates that they both increase/decrease together, and the value close to 1 suggests that the linear relationship, if present, may be strong.
+
+### Comment: correlation of 0.97 suggests a possibility of a linear relationship between the variables, not a proof though. Positive sign indicates that they both increase at the same time. Absolute value close to 1 suggests that the linear relationship, if present, could be strong. Also, correlation is only a measure of association and is of little use in prediction.
 
 
 c. Can the correlation found in part 1b be interpreted reliably? Briefly explain.
 
-## Comment: no, it can't, because it may confuse other nonlinear relationships for a linear relationship. 
+
+### Comment: no, it can't, because it may confuse other nonlinear relationships for a linear relationship. 
 
 
 d. Obtain the 95% confidence interval for the slope, B1
+
+
+### First, check the slope coefficient, B1 = 15.03
 
 ```{r}
 summary(result)$coefficients
 ```
 
-```{r}
 
+### Second, compute 95% CI:
+
+```{r}
 confint(result, level = 0.95)
 ```
 
+
 e. Suppose a service person is sent to service 5 copiers. Obtain an appropriate 95%
 interval that predicts the total service time spent by the service person.
+
+
+### This is prediction interval for a response for a given x problem. Use `interval="prediction"`:
 
 ```{r}
 new_data <- data.frame(Serviced=5)
@@ -73,96 +88,146 @@ predict(result, new_data, level=0.95, interval="prediction")
 f. What is the value of the residual for the first observation? Interpret this value
 contextually.
 
+
+### This should be stored as a first element of residuals vector in the result object:
+
 ```{r}
 summary(result)$residuals[1]
 ```
 
 
-## Comment: in this case, the residual is equal to a difference between the actual value (Y_i) of the first observation and the predicted value (Y_hat). For the first observation, predicted value is much larger than the actul value and hence residual is negative 9.49. In other words, regression line goes above the first observation and residual indicates a vertical difference between the first observation and predicted value on the regression line for the first observation.
+### Comment: in this case, the residual is equal to a difference between the actual value (y_i) of the first observation and the predicted value (y_hat). For the first observation, predicted value is much larger than the actual observed value and this is why the residual is negative 9.49. In other words, regression line goes above the first observation.
 
 
-g. What is the average value of the all the residuals? Is this value surprising (or
-not)? Briefly explain.
+g. What is the average value of the all the residuals? Is this value surprising (or not)? Briefly explain.
 
 ```{r}
-anova.tab <- anova(result)
-anova.tab[2,3]
+mean(result$residuals)
 ```
 
-## Comment: the average value of the all the residuals seems to be very small, but it is not surprising given the overall good fit (large R squared) of the regression line. 
+
+### Comment: the average value of the all the residuals seems to be very small, but it is not surprising as, in theory, it should be zero. It is not exactly zero probably due to possible floating-point numrical errors. 
+
 
 ----
 
-# 2.  Calculating the missing values.
+# 2.  Calculating the missing values for the transfers problem.
 
 a. Carry out a hypothesis test to assess if there is a linear relationship between the
-variables of interest..
+variables of interest.
 
-## Comment: this requires checking if B1 (slope) is statistically different from zero. H0 will be B1=0 and then Ha: B1 != 0 (not zero). If H0 is true than the value of F statistics, i.e Regression Sum of Squares divided by Mean Squared Error, will be close to 1. How close to 1 is 160/2.2 = 72.7? It is very much different, so H0 is likely false, and the slope B1 is in fact different from zero, hence there is a liner relationship between the variables of interest.
+### Comment: the model aims to predict number of broken from number of transfers. This requires checking if B1 (slope) associated with transfers is statistically different from zero. H0 will be B1=0 and  Ha: B1 != 0 (not zero). If H0 is true than the value of F statistics, i.e Regression Sum of Squares divided by Mean Squared Error, will be close to 1. How close to 1 is 160/2.2 = 72.7? It is very much different from 1, so H0 is likely false, and the slope B1 is in fact different from zero and thus there is a liner relationship between the variables of interest.
 
 ```{r}
 1 - pt(160/2.2, 8)
 ```
-## Alternatively, t-test for the slop shoud give the same result as F statistics. Check if B1 is not different from zero: t_stat = (B1_hat-0)/se_of_B1_hat. 
 
-Decision criterion:
 
-* Critical region: reject H0 at level of significance of alpha if 
-|t| > t_(1-alpha/2; n-2)
+### Alternatively, t-test for the slop shoud give the same result as F statistic. Check if B1 is not different from zero: t_stat = (B1_hat-0)/se_of_B1_hat. Statistic is very large compared to critical region at alpha = 5%:
 
 ```{r}
-a = 0.05
-n = 10
-df = n-2 
-qt(1-a/2, df)
+((4-0)/0.469)
+#pt(-((4-0)/0.469), 8)*2
 ```
 
-Checking (B1-0) / se_B1, also squring this value should be eaual to F-stat:
+### Critical t:
 
 ```{r}
-((4-0)/0.469) ** 2
+qt(1-0.05/2, 8)
 ```
 
+### Comment, H0 will be rejected at a very high level of statistical significance. Rejecting H0 indicates the the data support Ha and thus B1 is not zero. Accept that there is a linear relationship between the variables of interest.
 
-* P-value approach: the two-sided p-value is 2*P{t_(n-2) > |t|}. If p-value is less than alpha, reject H0.
+b. Calculate a 95% confidence interval that estimates the unknown value of the population slope.
 
-NOTE: rejecting H0 indicates out data support Ha!
+### Comment: interval for the unknown population slope can be calculated using statistics +/-(multiplier * s.e. of statistics). The lower bound is given by:
 
-b. Calculate a 95% confidence interval that estimates the unknown value of the
-population slope.
+```{r}
+4 - qt(1-0.05/2, 8) * 0.469
+```
 
-## Comment: use statistics+/-(multiplier * s.e. of statistics)
+### And the upper bound is given by:
 
+```{r}
+4 + qt(1-0.05/2, 8) * 0.469
+```
 
 c. A consultant believes the mean number of broken ampules when no transfers
 are made is different from 9. Conduct an appropriate hypothesis test (state the
 hypotheses statements, calculate the test statistic, and write the corresponding
 conclusion in context, in response to his belief).
 
-## Comment: H0: B0 = 9 ??? the mean number of broken ampules is not different 9, and Ha: B0 != 9, the mean number is actually different. To test this, t_stat = (B0_hat - B()/ se_B0_hat
+### Comment: no transfers suggests x_i=0, so one needs to focus on the intercept, is it different from 9? Therefore, H0: B0 = 9 the mean number of broken ampules is not different from 9, and Ha: B0 != 9, the mean number is actually different. To test this, t_stat = (B0_hat - B0)/ se_B0_hat
 
 ```{r}
 (10.2-9) / 0.6633
 ```
 
-Compared to critical t:
+### Compared to critical t:
 
 ```{r}
-qt(1-a/2, df)
+qt(1-0.05/2, 8)
 ```
 
-
-
+### Conclusion: H0 can't be rejected and therefore the mean number of broken ampulse is not different from 9.
 
 
 d. Calculate a 95% confidence interval for the mean number of broken ampules and a 95% prediction interval for the number of broken ampules when the number of transfers is 2.
 
+### Confidence interval 
+
+```{r}
+x_i = 2
+x_bar = 1
+S_xx = 10
+mu_hat = 10.2 + 4*x_i
+alpha = 0.05
+n = 10
+t = qt(alpha/2, n-2)
+se = sqrt(2.2*(1/n+(x_i-x_bar)**2/S_xx))
+upper = mu_hat + t * se
+lower = mu_hat - t * se
+
+cat("Confidence interval for the mean when transfers equal to 2: [", upper, ",", lower, "]")
+```
+
+
+### Prediction interval 
+
+```{r}
+x_i = 2
+x_bar = 1
+S_xx = 10
+mu_hat = 10.2 + 4*x_i
+alpha = 0.05
+n = 10
+t = qt(alpha/2, n-2)
+se = sqrt(2.2*(1 + 1/n+(x_i-x_bar)**2/S_xx))
+upper = mu_hat + t * se
+lower = mu_hat - t * se
+
+cat("Prediction interval for transfers equal to 2: [", upper, ",", lower, "]")
+```
 
 e. What happens to the intervals from the previous part when the number of transfers is 1? (Describe what happens without calculating).
+
+### This relates to how the width of the confidence interval changes as the value of the predictor variable moves farther away from the sample mean of the predictor? The interval will become smaller.
 
 
 f. What is the value of the F statistic for the ANOVA table?
 
+### This can be calculated from Mean Squares:
+
+```{r}
+160/2.2
+```
+
+Alternatively, B1 t statistic squared should be equal to F statistics:
+
+```{r}
+t = 4/0.469
+t**2
+```
 
 g. Calculate the value of R2, and interpret this value in context.
 
@@ -170,19 +235,20 @@ g. Calculate the value of R2, and interpret this value in context.
 160/(160+17.6)
 ```
 
-## Comment: R2 is close to one. It implies that the model is probably good hence  more than 90% of variance in Y was explained by the regression.
+
+## Comment: R2 is close to one. It implies that the regression is probably good hence more than 90% of variance in y was explained by the regression.
 
 
 ----
 
-# 3. Population slope for a straight-line relationship is 0.
+# 3. Population slope problem.
 
 a. Describe how the straight line would look in a plot of y versus x.
 
-## I think it will look like a staight line from y=B0 (intercept) parallel to x.
+## I think it will look like a straight line parallel to x.
 
 b. Explain why a slope that is equal to 0 would indicate that y and x are not linearly
 related, and why a slope that is not equal to 0 would indicate that y and x are
 linearly related.
 
-
+### Generally, we are interested in the slope because it shows how Y changes with X. Slope of 0 means that there is nothing in X that can help explain Y, or in other words there is no relationship between between X and Y. Nonzero slope will allow X to contribute some explanation into Y, and if this contribution or slope is significantly different from a random chance, X and Y may be deemed linearly related. 

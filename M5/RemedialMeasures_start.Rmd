@@ -9,7 +9,7 @@ output: html_document
 
 The data set mammals from the MASS package contains the average brain and body weights for 62 species of land mammals. We wish to see how body weight (x) could explain the brain weight (y) of land mammals.
 
-```{}
+```{r}
 library(MASS)
 data(package = 'mammals')
 head(mammals)
@@ -85,6 +85,18 @@ boxcox(result, lambda = seq(-0.1, 0.4, 1/10) )
 ```{r}
 y_star <- (mammals$brain)^0.01
 mammals <- data.frame(mammals, y_star)
+
+ggplot(mammals, aes(x=body, y=y_star))+
+  geom_point()+
+  geom_smooth(method = "lm", se = TRUE)+
+  labs(x="Average body weight", y="Average brain weight",
+       title="Regression line with residuals for transformed brain weight (lambda=0.01) against body weight of land mammals")
+
+```
+
+6. Fit a simple linear regression to y∗ against x, and create the corresponding residual plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones?
+
+```{r}
 result.y_star <- lm(y_star ~ body, data=mammals)
 
 y_hat2 <- result.y_star$fitted.values
@@ -97,32 +109,69 @@ ggplot(mammals, aes(x=y_hat2, y=res2))+
 
 ```
 
-6. Fit a simple linear regression to y∗ against x, and create the corresponding residual plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones?
+### Observation: probably we also have issue #1, mean=0 does not hold true as well. Checking with Box Cox once again to make sure no further issue #2 transformations are warranted. 
 
-
-
+```{r}
+boxcox(result.y_star)
+```
 
 
 7. Do we need to transform the x variable? If yes, what transformation(s) would you try? ∗∗
 Briefly explain. Create a scatterplot of y against x . Do any assumptions for simple linear regression appear to be violated? If so, which ones?
 
+### May be issue #1 now? => transform x 
 
+```{r}
+x_star<-1/(mammals$body)
+mammals<-data.frame(mammals,x_star)
 
+result.x_star<-lm(y_star~x_star, data=mammals)
 
+y_hat3<-result.x_star$fitted.values
+res3<-result.x_star$residuals
+mammals<-data.frame(mammals,y_hat3,res3)
+
+##residual plot with xstar
+ggplot(mammals, aes(x=y_hat3,y=res3))+
+  geom_point()+
+  geom_hline(yintercept=0, color="red")+
+  labs(x="Fitted y", y="Residuals", title="Residual Plot with xstar")
+
+```
 
 8. Fit a simple linear regression to y∗ against x∗, and create the corresponding residual plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones? If the assumptions are not met, repeat with a different transformation on the predictor until you are satisfied.
 
+```{r}
+ggplot(mammals, aes(x=x_star, y=y_star))+
+  geom_point()+
+  geom_smooth(method = "lm", se = TRUE)+
+  labs(x="Average body weight", y="Average brain weight",
+       title="Regression line with residuals for transformed brain weight (lambda=0.01) against transformed body weight of land mammals")
 
-
+```
 
 9. Create an ACF plot of the residuals. Comment if assumptions are met for linear regression.
 
+```{r}
+acf(res, main="ACF Plot of Residuals with origiinal x")
 
+```
+
+
+```{r}
+acf(res3, main="ACF Plot of Residuals with xstar")
+
+```
 
 
 10. Create a QQ plot of the residuals. Comment if assumptions are met for linear regres- sion.
 
 
+```{r}
+qqnorm(res3)
+qqline(res3, col="red")
+
+```
 
 
 11. Write out the regression equation, and if possible, interpret the slope of the regression.

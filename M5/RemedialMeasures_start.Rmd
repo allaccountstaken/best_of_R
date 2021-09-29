@@ -27,14 +27,21 @@ ggplot(mammals, aes(x=body, y=brain))+
       
 ```
 
-### Comment on appearance of the plot: 2 influencial observations on the far right may cause a problem when fitting the least squares regression line. However, it is not obvious if assumptions of SLR were actually violated. 
+### Comment on appearance of the plot: 2 influencial observations on the far right may cause a problem when fitting the least squares regression line. It is not 100% obvious if assumptions of SLR were actually violated. Several observations:
+* General pattern may be assumed linear, NOT the last 2 observations;
+* Data points are NOT evenly scattered around OLS line;
+* Vertical variation of data points is NOT constant.
 
 
 2. Fit a simple linear regression to the data, and create the corresponding residual plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones?
 
 ```{r}
-result = lm(brain ~ body, data=mammals)
-summary(result)
+library(tidyverse)
+ggplot(mammals, aes(x=body, y=brain))+
+  geom_point()+
+  geom_smooth(method = "lm", se = TRUE)+
+  labs(x="Average body weight", y="Average brain weight",
+       title="Regression line with residuals for brain weight against body weight of land mammals")
 ```
 
 

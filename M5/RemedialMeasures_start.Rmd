@@ -83,7 +83,7 @@ boxcox(result, lambda = seq(-0.1, 0.4, 1/10) )
 5. Apply the transformation you specified in part 4, and let y∗ denote the transformed response variable. Create a scatterplot of y∗ against x. Comment on the appearance of the plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones?
 
 ```{r}
-y_star <- (mammals$brain)^0.01
+y_star <- log (mammals$brain)
 mammals <- data.frame(mammals, y_star)
 
 ggplot(mammals, aes(x=body, y=y_star))+
@@ -122,10 +122,10 @@ Briefly explain. Create a scatterplot of y against x . Do any assumptions for si
 ### May be issue #1 now? => transform x 
 
 ```{r}
-x_star<-1/(mammals$body)
+x_star<-log(mammals$body)
 mammals<-data.frame(mammals,x_star)
 
-result.x_star<-lm(y_star~x_star, data=mammals)
+result.x_star<-lm(y_star ~ x_star, data=mammals)
 
 y_hat3<-result.x_star$fitted.values
 res3<-result.x_star$residuals

@@ -11,7 +11,7 @@ The data set mammals from the MASS package contains the average brain and body w
 
 ```{r}
 library(MASS)
-data(package = 'mammals')
+#data(package = 'mammals')
 head(mammals)
 ```
 
@@ -112,7 +112,7 @@ ggplot(mammals, aes(x=y_hat2, y=res2))+
 ### Observation: probably we also have issue #1, mean=0 does not hold true as well. Checking with Box Cox once again to make sure no further issue #2 transformations are warranted. 
 
 ```{r}
-boxcox(result.y_star)
+#boxcox(result.y_star)
 ```
 
 
@@ -169,16 +169,24 @@ acf(res3, main="ACF Plot of Residuals with xstar")
 
 ```{r}
 qqnorm(res3)
-qqline(res3, col="red")
+#qqline(res3, col="red")
 
 ```
 
 
 11. Write out the regression equation, and if possible, interpret the slope of the regression.
 
+```{r}
+final_result <- lm(formula = y_star ~ x_star, data = mammals)
+summary(final_result)
+```
 
+### Model: y_star = 2.13 + 0.75 * x_star, where y_star = log(brain)m x_star = log(mass)
 
-
+Since both variables were log transformed, we interpret the slope of 0.75 as, for a 1% increase
+in body weight, the weight of the brain increases by approximately 0.75%.
+We note that based on the residual plot, ACF plot of residuals, and QQ plot of residuals in
+parts 8, 9, and 10, the assumptions for this regression model are met.
 
 
 

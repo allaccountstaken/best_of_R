@@ -5,7 +5,8 @@ date: "9/14/2021"
 output: html_document
 ---
 ## Questions:
-#### 9. Eestimated value for the standard deviation of the error terms????
+#### General on regression - what is significance of "the errors are assumed to have  unknown variance
+#### 9. Eestimated value for the standard deviation of the error terms???? Meaning standard error of regression???
 
 
 ```{r setup, include=FALSE}

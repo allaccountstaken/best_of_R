@@ -1,0 +1,68 @@
+---
+title: "Homework3"
+author: "Dima Mikhaylow"
+date: "9/21/2021"
+output: html_document
+---
+
+## Linear regression based on `copier.txt` data
+
+```{r}
+Data = read.table("copier.txt", header=TRUE)
+head(Data)
+```
+a. What is the response variable in this analysis? What is predictor in this analysis?
+* Response variable is "Services" and predictor is "Minutes". In other words, input X is time, i.e number of minutes spent, and the output Y is an estimate of how many devices coud be serviced. 
+
+b. Produce a scatterplot of the two variables. How would you describe the relationship between the number of copiers serviced and the time spent by the service person?
+
+
+```{r}
+library(tidyverse)
+ggplot(Data, aes(x=Minutes, y=Serviced))+
+  geom_point()+
+  theme(axis.text.x=element_text(angle=90))+
+  labs(x="Minutes", 
+       y="Serviced", 
+       title="Scatterplot of number of serviced devices and time spent")
+
+```
+
+#### Notes:
+* Relationship appears to be linear.
+
+c. Use the `lm()` function to fit a linear regression for the two variables.
+
+```{r}
+result <- lm(Serviced ~ Minutes, data=Data)
+summary(result)
+```
+
+
+#### Notes:
+* B0 (Intercept) is 0.25
+* B1 (Slope for Minutes) is 0.06
+* R-squared in 0.96
+* Residual std. error is 0.58
+
+
+d. Interpret the values of B1_hat and B0_hat contextually. Does the value of B0_hat make sense in this context?
+
+#### Notes:
+* B1_hat is positive and significant, it can be interpreted as an increase in number devices Serviced per unit of time spent.
+* B0_hat is small and positive, but it probably does not have contextual meaning as there are no zero predictor observations.
+
+
+e. Use the `anova()` function to produce the ANOVA table for this linear regression.
+What is the value of the ANOVA F statistic? What null and alternative hypotheses are being tested here? What is a relevant conclusion based on this ANOVA F statistic?
+
+
+```{r}
+anova.tab <- anova(result)
+anova.tab
+```
+
+
+
+#### Notes
+F statistic is 968.7 and statistically significant. ANOVA F-test null hypothesis (H0: B1=0) is that slope is zero, hence no relationship. Alternative is that the slope is not zero, hence some relationship. Conclusion is that we have to reject H0 and accept alternative, hence the slope B1 is probably not zero.

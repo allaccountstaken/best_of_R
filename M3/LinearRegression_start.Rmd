@@ -4,9 +4,6 @@ author: "Dima Mikhaylow"
 date: "9/14/2021"
 output: html_document
 ---
-## Questions:
-#### General on regression - what is significance of "the errors are assumed to have  unknown variance
-#### 9. Eestimated value for the standard deviation of the error terms???? Meaning standard error of regression???
 
 
 ```{r setup, include=FALSE}
@@ -77,13 +74,14 @@ result <- lm(body_mass_g ~ flipper_length_mm, data=Gentoo)
 summary(result)
 ```
 
+
 6. Interpret the estimated slope contextually.
 
 #### Observation: the slope of 54.62 suggests that for 1 mm increase of Flipper length, there will be app. 55 gram increase in Body mass.
 
 7. Does the estimated intercept make sense contextually?
 
-#### Observation: yes, it does, as bigger birds tend to have longer flippers.
+#### Observation: negative intercept means no x=0.For slope it is much more usefully, as bigger birds tend to have longer flippers.
 
 8. Report the value of R2 from this linear regression, and interpret its value contextually.
 
@@ -92,7 +90,7 @@ summary(result)
 9. What is the estimated value for the standard deviation of the error terms for this
 regression model?
 
-#### ?? Residual standard error: 360.2 ??
+#### Residual standard error: 360.2
 
 10. For a Gentoo penguin which has a flipper length of 220mm, what is its predicted body mass in grams?
 

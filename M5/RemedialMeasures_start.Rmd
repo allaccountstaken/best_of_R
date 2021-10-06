@@ -77,7 +77,7 @@ boxcox(result)
 boxcox(result, lambda = seq(-0.1, 0.4, 1/10) )
 ```
 
-### From Box Cox above, lambda of 0.08 seems like an optimal choice, for siplification purposes can try lambda=0.1 as well.
+### From Box Cox above, lambda of 0.08 seems like an optimal choice, for simplification purposes can try lambda=0.1 as well.
 
 
 5. Apply the transformation you specified in part 4, and let y∗ denote the transformed response variable. Create a scatterplot of y∗ against x. Comment on the appearance of the plot. Do any assumptions for simple linear regression appear to be violated? If so, which ones?

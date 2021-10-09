@@ -1,0 +1,14 @@
+---
+title: "project_q4"
+author: "Dima Mikhaylow"
+date: "10/9/2021"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+df <- read_csv("diamonds4.csv")
+```

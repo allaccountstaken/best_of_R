@@ -1,0 +1,90 @@
+---
+title: "HW7"
+author: "Dima Mikhaylow"
+date: "10/19/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(faraway)
+data(seatpos)
+head(seatpos)
+```
+
+Predictors from the dataset:
+• x1: Age. Age in years
+• x2: Weight. Weight in pounds
+• x3: HtShoes. Height with shoes in cm
+• x4: Ht. Height without shoes in cm
+• x5: Seated. Seated height in cm
+• x6: Arm. Arm length in cm
+• x7: Thigh. Thigh length in cm
+• x8: Leg. Lower leg length in cm
+
+
+1. Fit the full model with all the predictors. Using the summary() function, comment on
+the results of the t tests and ANOVA F test from the output.
+
+```{r}
+result <- lm(hipcenter ~ ., data=seatpos)
+summary(result)
+```
+
+2. Briefly explain why, based on your output from part 1, you suspect the model shows
+signs of multicollinearity.
+
+#### This is a possibility of multicollinearity becuase all individual predictive variables came out as statistically insignificant, although the overall F-statistic is highly significant.
+
+
+3. Provide the output for all the pairwise correlations among the predictors. Comment
+briefly on the pairwise correlations.
+
+```{r}
+pairs(seatpos, lower.panel=NULL)
+```
+
+maps
+
+4. Check the variance inflation factors (VIFs). What do these values indicate about
+multicollinearity?
+
+
+
+5. Looking at the data, we may want to look at the correlations for the variables that
+describe length of body parts: HtShoes, Ht, Seated, Arm, Thigh, and Leg. Comment
+on the correlations of these six predictors.
+
+
+
+6. Since all the six predictors from the previous part are highly correlated, you may decide
+to just use one of the predictors and remove the other five from the model. Decide
+which predictor out of the six you want to keep, and briefly explain your choice.
+
+
+
+
+7. Based on your choice in part 6, fit a multiple regression with your choice of predictor
+to keep, along with the predictors x1 = Age and x2 =Weight. Check the VIFs for this
+model. Comment on whether we still have an issue with multicollinearity.
+
+
+
+
+8. Conduct a partial F test to investigate if the predictors you dropped from the full
+model were jointly insignificant. Be sure to state a relevant conclusion.
+
+
+
+
+9. Produce a plot of residuals against fitted values for your model from part 7. Based on
+the residual plot, comment on the assumptions for the multiple regression model. Also
+produce an ACF plot and QQ plot of the residuals, and comment on the plots.
+
+
+
+10. Based on your results, write your estimated regression equation from part 7. Also
+report the R2 of this model, and compare with the R2 you reported in part 1, for the
+model with all predictors. Also comment on the adjusted R2
+for both models.
+

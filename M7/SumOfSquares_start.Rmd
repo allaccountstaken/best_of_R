@@ -48,7 +48,6 @@ pairs(seatpos, lower.panel=NULL)
 ```
 
 ```{r}
-install.packages("GGally")
 library(GGally)
 ggpairs(seatpos)
 ```
@@ -109,19 +108,56 @@ summary(subset_result)
 vif(subset_result)
 ```
 
-#### Values less then 10, not sure how to interpret (?)
+#### All the values are less than 10 -- not sure how to interpret (?)
 
 
 8. Conduct a partial F test to investigate if the predictors you dropped from the full
 model were jointly insignificant. Be sure to state a relevant conclusion.
 
+#### H0: B3 = B4 = B5 = B6 = B8 = 0 and Ha: B3, B4, B5, B6, B8 not 0.
+#### In words, null hypothesis is going with the reduced subset model, and alternative supports the full model not dropping any of the predictors. 
 
+#### First approach - compare two F-statistics from the ANOVA. Below are the outputs of ANOVA for the reduced, subset model and original, full model.
+
+```{r}
+anova(subset_result, result)
+```
+
+
+#### F-statistic is not too small abd p-value is high, greater than 0.05 -- two-sided shoudl be used here, question (?). Not enought evidence to reject H0 -- question (?)
+
+```{r}
+# change in residuals over number of variables to drop:
+F_stat <- ((57963-41262) / 5) / (41262 / 29)
+F_stat
+```
+
+#### Second approach - sequantial SSR: use ANOVA on the full test model and look for the predictors to drop being listed last
+
+```{r}
+# Other possibilities were considered here, for example "Leg"..., the problem seems to come from "Age"
+test_model <- lm(hipcenter ~ Age + Weight + Thigh + ., data=seatpos)
+anova(test_model)
+```
+
+
+```{r}
+# F statistic is the same as above from the first approach:
+F0_stat = ((12900+54+419+674+2655)/5)/(41262/29)
+F0_stat
+```
+
+```{r}
+# Check the p-value for this F statistic
+1-pf(F0_stat, 5, 29)
+```
+
+#### Conclusion: Fail to reject H0 => go with the reduced subset model. Question: "Age" seems to be the biggest problem, dropping height related variables helps somewhat, but still the model is not good.
 
 
 9. Produce a plot of residuals against fitted values for your model from part 7. Based on
 the residual plot, comment on the assumptions for the multiple regression model. Also
 produce an ACF plot and QQ plot of the residuals, and comment on the plots.
-
 
 
 

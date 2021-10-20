@@ -1,7 +1,7 @@
 ---
 title: "HW7"
 author: "Dima Mikhaylow"
-date: "10/19/2021"
+date: "10/20/2021"
 output: html_document
 ---
 
@@ -12,7 +12,7 @@ data(seatpos)
 head(seatpos)
 ```
 
-Predictors from the dataset:
+#### Predictors from the dataset:
 • x1: Age. Age in years
 • x2: Weight. Weight in pounds
 • x3: HtShoes. Height with shoes in cm
@@ -31,10 +31,13 @@ result <- lm(hipcenter ~ ., data=seatpos)
 summary(result)
 ```
 
+#### All slope coefficients are not significant, but F test appears highly significant with very small p-value of 1.3e-0.5.
+
+
 2. Briefly explain why, based on your output from part 1, you suspect the model shows
 signs of multicollinearity.
 
-#### This is a possibility of multicollinearity becuase all individual predictive variables came out as statistically insignificant, although the overall F-statistic is highly significant.
+#### There is a possibility of multicollinearity becuase all individual predictor variables came out as statistically insignificant, although the overall F-statistic is highly significant.
 
 
 3. Provide the output for all the pairwise correlations among the predictors. Comment
@@ -43,7 +46,14 @@ briefly on the pairwise correlations.
 ```{r}
 pairs(seatpos, lower.panel=NULL)
 ```
-#### Obviously, most predictors are highly correlated to each other.
+
+```{r}
+install.packages("GGally")
+library(GGally)
+ggpairs(seatpos)
+```
+
+#### Obviously, most predictors are highly correlated to each other. Specifically, "HtShoes", "Ht", "Seated", and "Leg" are very strongly (above absolute 70%) correlated with the dependent variable "hipcenter" as well as with each other.
 
 4. Check the variance inflation factors (VIFs). What do these values indicate about
 multicollinearity?
@@ -52,7 +62,7 @@ multicollinearity?
 vif(result)
 ```
 
-#### 
+#### VIF suggests multicollinearity is present as there are several factors greater than 10, for example "HtShoes" and "Ht" appear exceptionally high. Others, "Seated" and "Leg" have large values as well.
 
 
 5. Looking at the data, we may want to look at the correlations for the variables that
@@ -64,35 +74,42 @@ selected_vars = seatpos[, c("HtShoes", "Ht", "Seated", "Arm", "Thigh", "Leg")]
 pairs(selected_vars, lower.panel=NULL)
 ```
 
-#### All selected variables appear to be very correlated:
+#### All selected variables appear to be very correlated.
+
+```{r}
+ggpairs(selected_vars)
+```
+
+#### Better visual above shows stromg correlations between body parts. Below is correlation matrix with exact values:
 
 ```{r}
 cor(selected_vars)
 ```
 
 
-
 6. Since all the six predictors from the previous part are highly correlated, you may decide
 to just use one of the predictors and remove the other five from the model. Decide
 which predictor out of the six you want to keep, and briefly explain your choice.
 
-```{r}
-anova(result)
-```
-
-
-```{r}
-install.packages("corrplot")
-library(corrplot)
-corrplot(selected_vars)
-```
+#### It seems that "Ht" is a better single predictor as it appears to have the strongest correlation with all other variables at the same time.
 
 
 7. Based on your choice in part 6, fit a multiple regression with your choice of predictor
 to keep, along with the predictors x1 = Age and x2 =Weight. Check the VIFs for this
 model. Comment on whether we still have an issue with multicollinearity.
 
+``` {r}
+subset_result <- lm(hipcenter ~ Age + Weight + Ht, data=seatpos)
+summary(subset_result)
+```
 
+#### Yes, multicollinearity is still a possibility, as some slopes are not significant with an overall significant F test.
+
+```{r}
+vif(subset_result)
+```
+
+#### Values less then 10, not sure how to interpret (?)
 
 
 8. Conduct a partial F test to investigate if the predictors you dropped from the full
@@ -111,4 +128,11 @@ produce an ACF plot and QQ plot of the residuals, and comment on the plots.
 report the R2 of this model, and compare with the R2 you reported in part 1, for the
 model with all predictors. Also comment on the adjusted R2
 for both models.
-
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

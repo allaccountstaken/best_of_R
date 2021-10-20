@@ -124,6 +124,29 @@ produce an ACF plot and QQ plot of the residuals, and comment on the plots.
 
 
 
+
+``` {r}
+y_hat<-subset_result$fitted.values
+residuals<-subset_result$residuals
+plot_data<-data.frame(y_hat,residuals)
+
+
+ggplot(plot_data, aes(x=y_hat, y=residuals))+
+  geom_point()+
+  geom_hline(yintercept=0, color="red")+
+  labs(x="Fitted y", y="Residuals", title="Residual plot of the subset_result model")
+```
+
+
+```{r}
+acf(residuals, main="ACF Plot of Residuals of the subset_result model")
+
+```
+
+```{r}
+qqnorm(residuals)
+```
+
 10. Based on your results, write your estimated regression equation from part 7. Also
 report the R2 of this model, and compare with the R2 you reported in part 1, for the
 model with all predictors. Also comment on the adjusted R2

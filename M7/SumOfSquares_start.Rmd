@@ -43,17 +43,32 @@ briefly on the pairwise correlations.
 ```{r}
 pairs(seatpos, lower.panel=NULL)
 ```
-
-maps
+#### Obviously, most predictors are highly correlated to each other.
 
 4. Check the variance inflation factors (VIFs). What do these values indicate about
 multicollinearity?
 
+```{r}
+vif(result)
+```
+
+#### 
 
 
 5. Looking at the data, we may want to look at the correlations for the variables that
 describe length of body parts: HtShoes, Ht, Seated, Arm, Thigh, and Leg. Comment
 on the correlations of these six predictors.
+
+```{r}
+selected_vars = seatpos[, c("HtShoes", "Ht", "Seated", "Arm", "Thigh", "Leg")]
+pairs(selected_vars, lower.panel=NULL)
+```
+
+#### All selected variables appear to be very correlated:
+
+```{r}
+cor(selected_vars)
+```
 
 
 
@@ -61,7 +76,16 @@ on the correlations of these six predictors.
 to just use one of the predictors and remove the other five from the model. Decide
 which predictor out of the six you want to keep, and briefly explain your choice.
 
+```{r}
+anova(result)
+```
 
+
+```{r}
+install.packages("corrplot")
+library(corrplot)
+corrplot(selected_vars)
+```
 
 
 7. Based on your choice in part 6, fit a multiple regression with your choice of predictor

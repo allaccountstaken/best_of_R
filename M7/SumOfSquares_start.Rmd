@@ -91,7 +91,7 @@ cor(selected_vars)
 to just use one of the predictors and remove the other five from the model. Decide
 which predictor out of the six you want to keep, and briefly explain your choice.
 
-#### It seems that "Ht" is a better single predictor as it appears to have the strongest correlation with all other variables at the same time.
+#### It seems that "Ht" is a better single predictor as it appears to have the strongest correlation with all other variables at the same time, at the same time "Thigh" has smaller VIF and better business case for predicting seat position.
 
 
 7. Based on your choice in part 6, fit a multiple regression with your choice of predictor
@@ -99,11 +99,11 @@ to keep, along with the predictors x1 = Age and x2 =Weight. Check the VIFs for t
 model. Comment on whether we still have an issue with multicollinearity.
 
 ``` {r}
-subset_result <- lm(hipcenter ~ Age + Weight + Ht, data=seatpos)
+subset_result <- lm(hipcenter ~ Age + Weight + Thigh, data=seatpos)
 summary(subset_result)
 ```
 
-#### Yes, multicollinearity is still a possibility, as some slopes are not significant with an overall significant F test.
+#### All the slopes are significant, the overall F test is also significant.
 
 ```{r}
 vif(subset_result)

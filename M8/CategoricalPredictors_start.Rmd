@@ -8,26 +8,66 @@ output: html_document
 
 We will revisit the data set penguins from the palmerpenguins package. The data set contains size measurements for adult foraging penguins near Palmer Station, Antarctica. In this set of questions, we focus on exploring the relationship between body mass (y) and bill depth (x1) of three species of penguins.
 
+```{r setup, include=FALSE}
+library(tidyverse)
+library(palmerpenguins)
+data(package = 'palmerpenguins')
+head(penguins)
+```
 
 
 
 1. Create a scatterplot of the body mass against the bill depth of the penguins. How would you describe the relationship between these two variables?
 
+``` {r}
+ggplot(penguins, aes(x=bill_depth_mm, y=body_mass_g))+
+  geom_point()+
+  labs(x="Flipper depth (mm)", y="Body mass (grams)",
+       title="Scatterplot of Body mass against Flipper depth")
+```
 
 
 2. Create the same scatterplot but now with different colored plots for each species. Also be sure to overlay separate regression lines for each species. How would you now describe the relationship between the variables?
 
+```{r}
+unique(penguins$species)
+```
 
-3. Create a regression with interaction between bill depth and species, i.e. y=β0 +β1x1 +β2I1 +β3I2 +β4x1I1 +β5x1I2 +ε,
+
+``` {r}
+ggplot(penguins, aes(x=bill_depth_mm, y=body_mass_g, color=species ))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="Flipper depth (mm)", y="Body mass (grams)",
+       title="Scatterplot of Body mass against Flipper depth by different species")
+```
+#### Observation - regression lines are not paralle thus interection is expected!
+
+3. Create a regression with interaction between bill depth and species, i.e. y=β0 +β1x1 +β2I1 +β3I2 +β4x1I1 +β5x1I2 +ε, where I1 and I2 are indicator variables where I1 = 1 for Chinstrap penguins and 0 otherwise, and I2 = 1 for Gentoo penguins and 0 otherwise. Write down the estimated regression equation for this model.
+
+```{r}
+contrasts(penguins$species)
+```
 
 
+```{r}
+result = lm(body_mass_g ~ bill_depth_mm*species, data=penguins)
+summary(result)
+```
 
-where I1 and I2 are indicator variables where I1 = 1 for Chinstrap penguins and 0 otherwise, and I2 = 1 for Gentoo penguins and 0 otherwise. Write down the estimated regression equation for this model.
 
+#### Estimated model: mass=-283.28 + 217.15*X1 + 247.06*I1 -175.71*I2 -12.53*X1*I1 + 152.29 *X1*I2
 
 
 4. Carry out the relevant hypothesis test to see if the interaction terms can be dropped. What is the conclusion?
 
+```{r}
+reduced <- lm(body_mass_g ~ bill_depth_mm + species, data=penguins)
+anova(reduced, result)
+```
+
+
+#### P-value is significant, thus we CAN'T drop the interaction terms!
 
 
 5. Based on your answer in part 4, write out the estimated regression equations relating body mass and bill depth, for each species of the penguins.
@@ -37,24 +77,57 @@ where I1 and I2 are indicator variables where I1 = 1 for Chinstrap penguins and 
 
 6. Assess if the regression assumptions are met, for the model you will recommend to use (based on part 4). Also, be sure to carry out Levene’s test of equality of variances since we have a categorical predictor.
 
+```{r}
+par(mfrow=c(2,2))
+plot(result)
+```
+```{r}
+ACF(result)
+```
+
+#### Levene’s test of equality of variances
+
+```{r}
+ggplot(penguins, aes(x=species, y=body_mass_g))+
+  geom_boxplot()
+
+```
+
+```{r}
+#install.packages('lawstat')
+library(lawstat)
+levene.test(penguins$body_mass_g, penguins$species)
+```
+
+#### P-value is high enough, can't reject H0 that all the variances are equal.
 
 
 
 7. Briefly explain if we can conduct pairwise comparisons for the difference in mean body mass among all pairs of species for given values bill depth, i.e.,
 
-
+```{r}
+summary(reduced)
+```
 
 (a) Adelie and Chinstrap, 
-
-
+ not significant: 0.80069
 
 (b) Adelie and Gentoo,
-
+significant: 2e-16
 
 (c) Chinstrap and Gentoo.
-
+?
 
 
 
 
 If we are able to, conduct Tukey’s multiple comparisons and contextually interpret the results of these hypothesis tests.
+
+
+
+```{r}
+#install.packages('multcomp')
+library(multcomp)
+pairwaise <- glht(reduced, linfct=mcp(species="Tukey"))
+summary(pairwaise)
+```

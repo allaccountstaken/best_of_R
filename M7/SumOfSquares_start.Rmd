@@ -1,0 +1,197 @@
+---
+title: "HW7"
+author: "Dima Mikhaylow"
+date: "10/20/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(faraway)
+data(seatpos)
+head(seatpos)
+```
+
+#### Predictors from the dataset:
+• x1: Age. Age in years
+• x2: Weight. Weight in pounds
+• x3: HtShoes. Height with shoes in cm
+• x4: Ht. Height without shoes in cm
+• x5: Seated. Seated height in cm
+• x6: Arm. Arm length in cm
+• x7: Thigh. Thigh length in cm
+• x8: Leg. Lower leg length in cm
+
+
+1. Fit the full model with all the predictors. Using the summary() function, comment on
+the results of the t tests and ANOVA F test from the output.
+
+```{r}
+result <- lm(hipcenter ~ ., data=seatpos)
+summary(result)
+```
+
+#### All slope coefficients are not significant, but F test appears highly significant with very small p-value of 1.3e-0.5.
+
+
+2. Briefly explain why, based on your output from part 1, you suspect the model shows
+signs of multicollinearity.
+
+#### There is a possibility of multicollinearity becuase all individual predictor variables came out as statistically insignificant, although the overall F-statistic is highly significant.
+
+
+3. Provide the output for all the pairwise correlations among the predictors. Comment
+briefly on the pairwise correlations.
+
+```{r}
+pairs(seatpos, lower.panel=NULL)
+```
+
+```{r}
+library(GGally)
+ggpairs(seatpos)
+```
+
+#### Obviously, most predictors are highly correlated to each other. Specifically, "HtShoes", "Ht", "Seated", and "Leg" are very strongly (above absolute 70%) correlated with the dependent variable "hipcenter" as well as with each other.
+
+4. Check the variance inflation factors (VIFs). What do these values indicate about
+multicollinearity?
+
+```{r}
+vif(result)
+```
+
+#### VIF suggests multicollinearity is present as there are several factors greater than 10, for example "HtShoes" and "Ht" appear exceptionally high. Others, "Seated" and "Leg" have large values as well.
+
+
+5. Looking at the data, we may want to look at the correlations for the variables that
+describe length of body parts: HtShoes, Ht, Seated, Arm, Thigh, and Leg. Comment
+on the correlations of these six predictors.
+
+```{r}
+selected_vars = seatpos[, c("HtShoes", "Ht", "Seated", "Arm", "Thigh", "Leg")]
+pairs(selected_vars, lower.panel=NULL)
+```
+
+#### All selected variables appear to be very correlated.
+
+```{r}
+ggpairs(selected_vars)
+```
+
+#### Better visual above shows stromg correlations between body parts. Below is correlation matrix with exact values:
+
+```{r}
+cor(selected_vars)
+```
+
+
+6. Since all the six predictors from the previous part are highly correlated, you may decide
+to just use one of the predictors and remove the other five from the model. Decide
+which predictor out of the six you want to keep, and briefly explain your choice.
+
+#### It seems that "Ht" is a better single predictor as it appears to have the strongest correlation with all other variables at the same time, at the same time "Thigh" has smaller VIF and better business case for predicting seat position.
+
+
+7. Based on your choice in part 6, fit a multiple regression with your choice of predictor
+to keep, along with the predictors x1 = Age and x2 =Weight. Check the VIFs for this
+model. Comment on whether we still have an issue with multicollinearity.
+
+``` {r}
+subset_result <- lm(hipcenter ~ Age + Weight + Thigh, data=seatpos)
+summary(subset_result)
+```
+
+#### All the slopes are significant, the overall F test is also significant.
+
+```{r}
+vif(subset_result)
+```
+
+#### All the values are less than 10 -- not sure how to interpret (?)
+
+
+8. Conduct a partial F test to investigate if the predictors you dropped from the full
+model were jointly insignificant. Be sure to state a relevant conclusion.
+
+#### H0: B3 = B4 = B5 = B6 = B8 = 0 and Ha: B3, B4, B5, B6, B8 not 0.
+#### In words, null hypothesis is going with the reduced subset model, and alternative supports the full model not dropping any of the predictors. 
+
+#### First approach - compare two F-statistics from the ANOVA. Below are the outputs of ANOVA for the reduced, subset model and original, full model.
+
+```{r}
+anova(subset_result, result)
+```
+
+
+#### F-statistic is not too small abd p-value is high, greater than 0.05 -- two-sided shoudl be used here, question (?). Not enought evidence to reject H0 -- question (?)
+
+```{r}
+# change in residuals over number of variables to drop:
+F_stat <- ((57963-41262) / 5) / (41262 / 29)
+F_stat
+```
+
+#### Second approach - sequantial SSR: use ANOVA on the full test model and look for the predictors to drop being listed last
+
+```{r}
+# Other possibilities were considered here, for example "Leg"..., the problem seems to come from "Age"
+test_model <- lm(hipcenter ~ Age + Weight + Thigh + ., data=seatpos)
+anova(test_model)
+```
+
+
+```{r}
+# F statistic is the same as above from the first approach:
+F0_stat = ((12900+54+419+674+2655)/5)/(41262/29)
+F0_stat
+```
+
+```{r}
+# Check the p-value for this F statistic
+1-pf(F0_stat, 5, 29)
+```
+
+#### Conclusion: Fail to reject H0 => go with the reduced subset model. Question: "Age" seems to be the biggest problem, dropping height related variables helps somewhat, but still the model is not good.
+
+
+9. Produce a plot of residuals against fitted values for your model from part 7. Based on
+the residual plot, comment on the assumptions for the multiple regression model. Also
+produce an ACF plot and QQ plot of the residuals, and comment on the plots.
+
+
+
+``` {r}
+y_hat<-subset_result$fitted.values
+residuals<-subset_result$residuals
+plot_data<-data.frame(y_hat,residuals)
+
+
+ggplot(plot_data, aes(x=y_hat, y=residuals))+
+  geom_point()+
+  geom_hline(yintercept=0, color="red")+
+  labs(x="Fitted y", y="Residuals", title="Residual plot of the subset_result model")
+```
+
+
+```{r}
+acf(residuals, main="ACF Plot of Residuals of the subset_result model")
+
+```
+
+```{r}
+qqnorm(residuals)
+```
+
+10. Based on your results, write your estimated regression equation from part 7. Also
+report the R2 of this model, and compare with the R2 you reported in part 1, for the
+model with all predictors. Also comment on the adjusted R2
+for both models.
+ 
+ 
+#### Estimated regression: Hipcenter_hat = Age + Weight + Thigh. This subset model produced R_squared of only 0.5597, this is smaller than the original R_squared of 0.6866. Adjusted R_squared also decreased from 0.6 down to 0.52. Check with class (?)
+ 
+ 
+ 
+ 
+ 

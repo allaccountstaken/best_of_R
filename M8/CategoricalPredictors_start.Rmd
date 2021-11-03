@@ -82,7 +82,7 @@ par(mfrow=c(2,2))
 plot(result)
 ```
 ```{r}
-ACF(result)
+acf(result$residuals)
 ```
 
 #### Levene’s test of equality of variances

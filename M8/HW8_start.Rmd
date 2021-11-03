@@ -1,0 +1,173 @@
+---
+title: "Homework8"
+author: "Dima Mikhaylov"
+date: "10/28/2021"
+output: html_document
+---
+
+
+## 1. You will use the birthwt data set from the MASS package for this question. The response variable is bwt, the weight of the baby at birth in grams.
+
+```{r}
+library(MASS)
+#data(package = 'birthwt')
+head(birthwt)
+```
+
+(a) Produce a scatterplot of bwt against age. Be sure to have separate colors and overlay the regression lines for each of the three racial categories. Based on this plot, explain why there is an interaction effect between the age of the mother and the race of the mother.
+
+
+#### First, check the data type of the categorical var `race`. If `integer`, it needs to be changed to levels...
+
+```{r}
+class(birthwt$race)
+```
+
+#### Use `factor()` function to change it to categorical levels:
+
+```{r}
+birthwt$race <- factor(birthwt$race)
+class(birthwt$race)
+```
+
+#### Now, `race` can be used to split observations to show possible interaction effect:
+
+
+```{r}
+library(tidyverse)
+ggplot(birthwt, aes(x=age, y=bwt, color=race))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="Age (years)", 
+       y="Birth weight (grams)",
+       title="Scatter plot of birth weight against age")
+      
+```
+
+
+##### Conclusion: from the plot above, all three races appear to have very different slopes of regression lines - learly not parallel. This is an idicator of strong interaction effect. Parallel lines would suggest additivity, but different slopes suggest interaction.
+
+
+(b) Fit a regression equation with interaction between the two predictors. How does this regression equation relate the age of the mother and the weight of the baby at birth for each of the three racial categories?
+
+#### First, review the set up of the dummy variables coding:
+
+```{r}
+contrasts(birthwt$race)
+```
+
+#### Next, run regression with interaction of age and weight:
+
+```{r}
+model = lm(bwt ~ age*race, data=birthwt)
+summary(model)
+```
+
+
+
+####  Estimated model: 
+#### bwt= 2583.54+21.37*(Age)+1022.79*(Race2)+326.05*(Race3)-62.54*(Age*Race2)-26.03*(Age*Race3)
+
+#### The nodel produces very low R-squared, check linear regression assumptions:
+
+```{r}
+par(mfrow=c(2,2))
+plot(model)
+```
+
+#### Check if 1 is in the CI of Box Cox plot to confirm that the variance is constant and hence we do not need to transform the respones variable.
+
+```{r}
+boxcox(model)
+```
+
+
+#### Conclusion: assumptions seem to be met, but the model is likely suffering from a very noisy data.
+
+
+
+## 2. (No R required) This question is based on data about teacher salaries from the 50 states plus DC (so n = 51) in the mid 1980s.
+
+  a. Based only on Table 1, briefly comment on the relationship between geographic area and mean teacher pay.
+
+#### It seems that mean pay may be influenced by AREA, as the pay is higher in the West ($26K), somewhat lower in the North ($24K), and the lowest in the South ($23). 
+ 
+  b. Based only on Table 1, briefly comment on the relationship between mean public school expenditure (per student) and mean teacher pay.
+
+#### Public school expenditure (per student) also seems to be related to teacher pay, as it tends to be higher in the area where teacher pay is higher ($3,919 in the West) and lower in the area where teached pay is lower ($3,274 in the South).
+
+  c. Briefly explain why using a multiple linear regression model with teacher pay as the response variable with geographic area and public school expenditure (per student) can give further insight into the relationship(s) between these variables.
+
+#### It is possible that public school expenditure interact with area and thus an interection term can better explain variance in the response variable teachers' pay. Multiple linear regression allows for additional high-order intercation terms
+
+
+## 3. This question is a continuation of question 2:
+
+  a. Carry out a hypothesis test to see if the interaction terms are significant.
+
+```{r}
+SpendArea_MS = 9720281 / 2
+F_stat = SpendArea_MS / 5266633
+p_value = 1-pf(F_stat, 2, 45, lower.tail=F)
+cat("p_value of", p_value, "is very high what suggests statistically insignificant slope of the interaction term")
+
+```
+
+#### Conclusion: fail to reject H0, in other words the interection term is not statistically significant.
+
+
+  b. Regardless of your answer from part 3a, suppose the interaction terms are dropped. What is the reference class for this model?
+
+#### Reference class of variable `AREA` appears to be "North". This class has value of 0 for all indicators.
+
+
+  c. What is the estimate of B2? Give an interpretation of this value.
+  
+#### From the model specification, B2 is a slope coefficient associated with I2 parameter, one the dummy codes for `AREA` categorical predictor. It is only meaningful, when I2 takes a value of 1, as opposed to 0, and this is the case of `AREA` being South. 
+
+#### From the summary table, B2 is estimated to be 529.4, positive increase in the response variable that is attributable to one unit of increase in SPEND in the South region (i.e. when controlling for SPEND).
+
+
+  d. Using the Bonferroni procedure, compute the 95% family confidence intervals for the difference in mean response for PAY between teachers in the North region and the South region, North region and the West region,  South region and the West region.
+  
+#### First, compute the multiplier for 95% family confidence intervals:
+
+```{r}
+g = 3 # number of pairwise comparisons
+a = 0.05 # original alpha
+p = 4 # params after the interaction terms were dropped 
+n = 51 # number of observations
+df = n-p # degrees of freedom
+multiplier = qt(1-(a/2*g), df)
+```
+
+#### So, B2 of 529.4, B2_se=766.9, is the difference between South and North. Note Estimate < Error, this will produce a very wide range.
+
+```{r}
+B2 = 529.4 
+B2_se = 766.9
+cat("B2 (North v South) 95% interval is [", B2-multiplier*B2_se,",", B2+multiplier*B2_se, "]")
+```
+  
+#### B3 of 1674, B3_se=801.2, is the difference between West and North:
+
+```{r}
+B3 = 1674
+B3_se=801.2
+cat("B3 (North v West) 95% interval is [", B3-multiplier*B3_se,",", B3+multiplier*B3_se, "]")
+```  
+
+#### To compare the mean response for two non-reference classes, region South and West, we need to look at the difference in the coefficients associated with these two classes. 
+
+```{r}
+Dif = 1.674e+03 - 5.294e+02 # Difference, B2-B3
+Dif_var = 6.418738e+05 + 588126.71689 - 2 * 2.442380e+05 #Variance of the Difference
+Dif_se = sqrt(Dif_var)
+cat("Diff. (South v West) 95% interval is [", Dif-multiplier*Dif_se,",", Dif+multiplier*Dif_se, "]")
+```
+
+
+  e. What do your intervals from part 3d indicate about the effect of geographic region on mean annual salary for teachers?
+
+#### It seems that results are not conclusive because the ranges are very large, and even include 0 when comparing North vs South or South vs West. This is due to a very large standard error of  South slope estimate. Noteworthy that it also has small t value and insignificant p-vlaue.
+

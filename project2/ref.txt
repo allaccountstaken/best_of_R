@@ -1,0 +1,17 @@
+Good credit risk datasets:
+https://www.listendata.com/2019/08/datasets-for-credit-risk-modeling.html
+
+Credit from German banks in R - classification only:
+http://rstudio-pubs-static.s3.amazonaws.com/171872_ab8dd184af0e4b2cbe3469b2c75b0093.html
+
+
+Freddie Mac loan data:
+https://towardsdatascience.com/how-to-prepare-data-for-credit-risk-modeling-5523641882f2
+
+Single family loan datasets:
+http://www.freddiemac.com/research/datasets/sf_loanlevel_dataset.page
+
+Here is a well documented dataset with some information about residential mortgages:
+http://www.freddiemac.com/fmac-resources/research/pdf/user_guide.pdf
+
+Idea as explained on page 25 of the user guide: 1) MLR to predict Default Unpaid Balance followed by 2) Logistic clf to see if owner asks for some kind of loan modification, and repeat in reverse order.

@@ -1,0 +1,155 @@
+---
+title: "Homework9"
+author: "Dima Mikhaylov"
+date: "11/5/2021"
+output: html_document
+---
+
+## Part 1
+
+```{r}
+library(MASS)
+#data(package = 'birthwt')
+head(birthwt)
+```
+```{r}
+?birthwt
+```
+
+a. Which of these variables are categorical? Ensure that R is viewing the categorical
+variables correctly. If needed, use the factor() function to force R to treat the
+necessary variables as categorical.
+
+#### First, check data types of all the columns:
+
+```{r}
+sapply(birthwt, class)
+```
+
+#### It seems that `race` - mother's race (1 = white, 2 = black, 3 = other) should be viewed as categorical. Apply `factor` function:
+
+
+```{r}
+birthwt$race <- as.factor(birthwt$race)
+class(birthwt$race)
+
+```
+
+
+b. A classmate of yours makes the following suggestion: “We should remove the
+variable low as a predictor for the birth weight of babies.” Do you agree with
+your classmate? Briefly explain. Hint: you do not need to do any statistical
+analysis to answer this question.
+
+
+#### Yes, I agree, variable `'low'` is not a good predictor for response variable `'bwt'`. It is actually produced from the response variable. In other words, it should be removed to avoid collinearity problem.
+
+c.  Based on your answer to part 1b, perform all possible regressions using the
+regsubsets() function from the leaps package. Write down the predictors that
+lead to a first-order model having the best
+
+#### First, drop variable '`low`' as discussed above, create new dataset `data`:
+
+```{r}
+data <- within(birthwt, rm('low')) 
+head(data)
+```
+
+#### Next, run all possible subsets:
+
+```{r}
+library(leaps)
+allregs <- regsubsets(bwt ~ ., data=data, nbest=1)
+summary(allregs)
+```
+
+i. adjusted R2
+
+#### The best R2 is given by the following coef:
+
+```{r}
+coef(allregs, which.max(summary(allregs)$adjr2))
+```
+
+ii. Mallow’s Cp,
+
+#### The best Mallows's C is given by the following coef:
+
+```{r}
+coef(allregs, which.min(summary(allregs)$cp))
+```
+
+iii. BIC.
+
+#### The best BIC is given by the following coef:
+
+```{r}
+coef(allregs, which.min(summary(allregs)$bic))
+```
+
+
+d. Based on your answer to part 1b, use backward selection to find the best model
+according to AIC. Start with the first-order model with all the predictors. What
+is the regression equation selected?
+
+```{r}
+regnull <- lm(bwt ~ 1, data=data)
+regfull <- lm(bwt ~ ., data=data)
+step(regfull, scope=list(lower=regnull, upper=regfull), direction = 'backward')
+```
+
+
+#### Selected model has AIC of AIC=2452.79: bwt ~ lwt + race + smoke + ht + ui
+
+## Part 2
+
+a. The output below is obtained after using the step() function using forward selection, starting with a model with just the intercept term. What is the model selected based on forward selection?
+
+#### The model with smallest AIC=-132.94 should be selected in this case: Share ~ discount + promo + price
+
+b. Your client asks you to explain what each step in the output shown above means.
+Explain the forward selection procedure to your client, for this output.
+
+#### In short, forward selection procedure starts with a simple intercept-only model and adds explanatory variables one by one trying to mimimize AIC SCORE. 
+
+#### Step 1: regress response variable '`Share'` on constant 1 - this produces a benchmark intercept-only model with AIC=-94.8
+
+#### Step 2: use 1 best predictor '`discount`'- this produces AIC=-128.14
+
+#### Step 3: use 2 best predicttors '`discount`' and '`promo`' - this produces AIC=-129.69
+
+#### Step 4: additing '`price`' lowers the score more down to AIC=-132.94
+
+#### Step 5: stop here, becuase adding the remaining variables '`time`' or '`nielsen`' does not decrease AIC any further. Actually selection '`none`' is the best choice because the resulting combination produces same lower score of -132.94, as in Step #3.
+
+c. Your client asks if he should go ahead and use the models selected in part 2a. What advice do you have for your client?
+
+#### It is the best model in terms of AIC. This result can be checked by running backward selection or stepwise regression - they all should produce similar results if minimal AIC is desirable. Maximazing expected entropy with BIC Schwarz criterion should also lead to similar results; this could be used to check the validity of the original findings. 
+
+#### My other advice would be to consider additional measures of penalized fit, such as AdjR2 or Mallows's C, and compare and contrast all the findings. Important is that possibly a better model can be developed if we allow for higher order or interaction terms.
+
+#### Finally, before deploying a model it is vital to check if regression assumptions are met, at least constant variance and zero means of the residuals. This should inform what model to select.
+
+## Part3. 
+
+Your client asks you to compare and contrast between R2 and the adjusted R2, specifically: name one advantage of R2 over the adjusted R2, and name one advantage of the adjusted R2 over R2.
+
+#### Advantage of R2 over the adjusted R2: since R2 assumes that every single independent variable explains the variation in the response variable, it has intuitive interpretation as a proportion of variance accounted for by the model. 
+
+#### Advantage of the adjusted R2 over R2: since it focuses on the independent variables that actually affect variation in the response variable, it can be used for feature importances. For example, one can use adjusted R2 to choose between y=x1+x2 or y=x1+x2+x3. This measure does not have stand alone intuitive interpretation though and should be only used to compare two modeles.
+
+## Part 4
+
+#### Include the function your group wrote to compute the PRESS statistic:
+
+```{r}
+#Custom function to calculate PRESS statistics:
+
+PRESS <- function(model) {
+    i <- residuals(model)/(1 - lm.influence(model)$hat)
+    sum(i^2)
+}
+
+```
+
+

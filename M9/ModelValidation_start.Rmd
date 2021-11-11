@@ -1,0 +1,121 @@
+---
+title: "ModelValidation"
+author: "Dima Mikhaylov"
+date: "11/1/2021"
+output: html_document
+---
+
+
+For this question, we will use the “nfl.txt” data set that we used in Guided Question Set 6. As a reminder, the data are on NFL team performance from the 1976 season. The variables are:
+
+```{r}
+dataset <- read.table("nfl.txt", header=TRUE)
+head(dataset)
+```
+
+• y: Games won (14-game season)
+• x1: Rushing yards (season)
+• x2: Passing yards (season)
+• x3: Punting average (yards/punt)
+• x4: Field goal percentage (FGs made/FGs attempted)
+• x5: Turnover differential (turnovers acquired minus turnovers lost)
+• x6: Penalty yards (season)
+• x7: Percent rushing (rushing plays/total plays)
+• x8: Opponents’ rushing yards (season)
+• x9: Opponents’ passing yards (season)
+
+
+1. Use the regsubsets() function from the leaps package to run all possible regressions. Set nbest=2.
+
+```{r}
+#install.packages("leaps")
+library(leaps)
+allregs <- regsubsets(y ~ ., data=dataset, nbest=2)
+summary(allregs)
+```
+
+2. Identify the model (the predictors and the corresponding estimated coefficients) that is best in terms of
+
+```{r}
+names(summary(allregs))
+```
+(a) Adjusted R2 
+```{r}
+which.max(summary(allregs)$adjr2)
+```
+```{r}
+coef(allregs, 7)
+```
+
+
+
+(b) Mallow’s Cp
+```{r}
+which.min(summary(allregs)$cp) 
+```
+
+```{r}
+coef(allregs, 2)
+```
+
+(c) BIC
+```{r}
+which.min(summary(allregs)$bic)
+```
+
+```{r}
+coef(allregs, 2)
+```
+
+3. Run forward selection, starting with an intercept-only model. Report the predictors
+and the estimated coefficients of the model selected.
+
+```{r}
+regnull <- lm(y ~ 1, data=dataset)
+regfull <- lm(y ~ ., data=dataset)
+step(regnull, scope=list(lower=regnull, upper=regfull), direction = 'forward')
+```
+
+
+
+4. Run backward elimination, starting with the model with all predictors. Report the predictors and the estimated coefficients of the model selected.
+
+```{r}
+step(regfull, scope=list(lower=regnull, upper=regfull), direction = 'backward')
+```
+
+x8 + x2 + x7 + x9
+
+5. Run stepwise regression, starting with an intercept-only model. Report the predictors and the estimated coefficients of the model selected.
+
+```{r}
+step(regnull, scope=list(lower=regnull, upper=regfull), direction = 'both')
+```
+
+6. Write a function that computes the PRESS statistic for a regression model. Hint: the diagonal elements from the hat matrix can be found using the lm.influence() function.
+
+
+```{r}
+#Custom function to calculate PRESS statistics:
+
+PRESS <- function(model) {
+    i <- residuals(model)/(1 - lm.influence(model)$hat)
+    sum(i^2)
+}
+
+```
+
+7. Using the function you wrote in part 6, calculate the PRESS statistic for your regression model with x2,x7,x8 as predictors. Calculate the R2 for this model, 2 and compare this value with its R . What comments can you make about the likely predictive performance of this model?
+
+```{r}
+model <- lm(y ~ x2+x7+x8, data=dataset)
+summary(model)
+```
+
+
+
+
+```{r}
+PRESS(model)
+
+```

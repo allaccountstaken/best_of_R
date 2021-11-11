@@ -1,0 +1,87 @@
+---
+title: "AdequacyAndLeverage_start"
+author: "Dima Mikhaylov"
+date: "11/8/2021"
+output: html_document
+---
+
+
+```{r}
+dataset <- read.table("nfl.txt", header=TRUE)
+head(dataset)
+```
+
+The variables are:
+
+• y: Games won (14-game season)
+• x1: Rushing yards (season)
+• x2: Passing yards (season)
+• x3: Punting average (yards/punt)
+• x4: Field goal percentage (FGs made/FGs attempted)
+• x5: Turnover differential (turnovers acquired minus turnovers lost)
+• x6: Penalty yards (season)
+• x7: Percent rushing (rushing plays/total plays)
+• x8: Opponents’ rushing yards (season)
+• x9: Opponents’ passing yards (season)
+
+
+We will continue to regress the number of games won against three predictors: passing
+yards, x2, percent rushing, x7, and opponents’ rushing yards in the season, x8.
+
+
+1. For this first question, you will generate partial regression plots for each of the predictors. As a reminder, a partial regression plot for predictor xk is obtained by:
+
+• Regressing y against the other predictors, x1, · · · , xk−1 ,that are already in the
+model and obtaining the residuals, e(y|x1, · · · , xk−1).
+
+• Regressing the predictor in question, xk, against the predictors that are already
+in the model and obtaining the residuals, e(xk|x1, · · · , xk−1).
+
+• Plotting the residuals against each other, e(y|x1, · · · , xk−1) against e(xk|x1, · · · , xk−1).
+
+
+(a) Produce the partial regression plot for x2. Interpret what this partial regression is telling us.
+
+```{r}
+lm(y ~ x2, data=dataset)
+```
+
+(b) Fit a linear regression for the partial regression plot for x2. Report the estimated
+coefficients.
+
+
+
+(c) Fit a linear regression for the response against the three predictors. Report the
+estimated coefficient for x2 and compare the value with the estimated slope from
+the previous part. What do you notice?
+
+
+
+(d) Before producing the partial regression plots for x7 and x8, what do you think
+will be the values of the estimated coefficients for the linear regression for each of
+these plots?
+
+
+
+(e) Produce the partial regression plots for x7 and x8. Interpret what both of these
+plots are telling us.
+
+
+2. Using externally studentized residuals, do we have any outliers? What teams are these?
+
+
+
+3. Do we have any high leverage data points for this multiple linear regression? What
+teams are these?
+
+
+4. Use DF F IT Si, DF BET ASj,i, and Cook’s distance to check for influential observations. What teams are influential?
+
+
+
+
+
+
+
+
+

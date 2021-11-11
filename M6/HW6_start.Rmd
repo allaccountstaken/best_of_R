@@ -1,0 +1,150 @@
+---
+title: "Homework6"
+author: "Dima Mikhaylov"
+date: "10/12/2021"
+output: html_document
+---
+
+
+## 1. Questions based on `swiss` dataset:
+
+```{r}
+library(datasets)
+library(tidyverse)
+library(corrplot)
+library(GGally)
+data(swiss)
+head(swiss)
+```
+
+
+(a) Create a scatterplot matrix and find the correlation between all pairs of variables for this data set. 
+
+
+```{r}
+pairs(swiss, lower.panel = NULL)
+```
+
+```{r}
+ggpairs(swiss)
+```
+Answer the following questions based on the output:
+
+
+i. Which predictors appear to be linearly related to the fertility measure?
+
+#### Comment: it seems that some predictors may be linearly related to the fertility, for example variables Argiculture, Examination, Education, and Catholic.
+
+ii. Do you notice if any of the predictors are highly correlated with one another? If so, which ones?
+
+```{r}
+round(cor(swiss), 2)
+```
+
+
+#### Comment: Examination and Education are more (negatively) correlated (r=-0.64 and -0.66, respectively). Catholic and Infant.Mortality are moderately (positively) correlated (r=0.46 and r=0.42, respectively). Argiculture is somewhat (positively) correlated (r=0.35).
+
+(b) Fit a multiple linear regression with the fertiliy measure as the response variable and all the other variables as predictors. Use the summary() function to obtain the estimated coefficients and results from the various hypothesis tests for this model.
+
+```{r}
+result <- lm(Fertility ~ Agriculture + Examination + Education + Catholic + Infant.Mortality, data=swiss)
+summary(result)
+```
+
+
+i. What is being tested by the ANOVA F statistic? What is the relevant conclusion in context?
+
+#### Comment: F statistic shows the overall significance of the model, i.e. if all the predictors taken together explain the dependent variable. In other words, H0: B1 = B2 = B3 = B4 = B5 = 0 and Ha: at least one of the slopes is not zero.  
+
+ii. Look at the numerical values of the estimated slopes as well as their p-values. Do they seem to agree with or contradict with what you had written in your answer to part 1a? Briefly explain what do you think is going on here.
+
+#### Comment: Examination variable, although correlated, appears to be not significant. Having said that, Education was correlated and also appears to be significant. Moreover, Agriculture, although not very correlated, appears to be statistically significant. This behaviour can be a result of correlated variables preventing each other from having high significance in MLR, when taken together. 
+
+
+## 2. Questions based on the data from 113 hospitals.
+
+(a) What is the value of the estimated coefficient of the variable Stay? Write a sentence that interprets this value.
+
+#### Comment: estimate of slope for Stay is  0.24, this is the expected change in the response variable per unit of change of Slope holding all over regressor variables constant. 
+
+(b) Derive the test statistic, p-value, and critical value for the variable Age. What null and alternative hypotheses are being evaluated with this test statistic? What conclusion should we make about the variable Age?
+
+#### Comment: using two-tailed test to check if the value is different from zero, H0: B=0 and Ha: B!=0. Given the large p value of 0.5367937 (not significant) we can't reject H0 that the slope for Age is zero.
+
+```{r}
+test_stats <- -0.014071 / 0.022708
+df <- 108
+p_value <- pt(test_stats, df) * 2
+cat("The p_value is", p_value)
+
+
+```
+
+
+(c) A classmate states: “The variable Age is not linearly related to the predicted infection risk.” Do you agree with your classmate’s statement? Briefly explain.
+
+#### Comment: no, I disagree. Form the analysis above we can only conclude that given all other regressors, the slope of Age is statistically indistinguishable from zero. It may still show a very significant linear relationship, even when measured by estimating the slope coefficient, when regressing with other predictors or solo.
+
+(d) Using the Bonferroni method, construct 95% joint confidence intervals for β1, β2, and β3.
+Calculating at least 95% confidence with the formula: Bi +/- [t (1-a/2g); n-p] * SE_Bi
+
+```{r}
+g = 3 # number of intervals
+a = 0.05 # original alpha
+df = 108 # degrees of freedom
+multiplier = qt(1-(a/2*g), df)
+B1 = 0.23 # estimate of variable "Stay"
+SE_B1 = 0.06 # error of estimate B1
+B2 = -0.01 # estimate of variable "Age"
+SE_B2 = 0.02 # error of estimate B2
+B3 = 0.02 # estimate of variable "Xray"
+SE_B3 = 0.01 # error of estimate B3
+cat("B1 95% interval is [", B1-multiplier*SE_B1,",", B1+multiplier*SE_B1, "]")
+```
+
+```{r}
+cat("B2 95% interval is [", B2-multiplier*SE_B2,",", B2+multiplier*SE_B2, "]")
+```
+
+```{r}
+cat("B3 95% interval is [", B3-multiplier*SE_B3,",", B3+multiplier*SE_B3, "]")
+```
+
+(e) Fill in the values for the ANOVA table for this regression model.
+
+#### ANOVA table:
+##### Degrees of freedome
+Regression_df = k = 4
+Error_df = n - k - 1 = 113 - 4 - 1 = 108
+Total_df = n - 1 = 113 - 1 = 112
+
+##### Sum of Squares
+Regression_SS = Regression_MS* Regression_df = 21.1561 * 4 =  84.6244
+Error_SS = Error_df * (Residual_std) ** 2 = 108 * ((1.04) ** 2 = 116.8128
+Total_SS = 84.6244 + 116.8128 = 201.4372
+
+##### Mean Square
+Regression_MS = F_stats * Error_MS = 19.56 * 1.0816 = 21.1561
+Error_MS = Error_SS / Error_df = 116.8128 / 108 = 1.0816
+F-stats = Regression_MS / Error_MS = 21.1561 / 1.0816 = 19.56 (check)
+
+(f) What is the R2 for this model? Write a sentence that interprets this value in context.
+
+#### From the missing ANOVA table
+##### R-squared is around 42% what indicates thath nearly half of variations in dependent variable were explained by 4 independent variables in this model.
+
+R2 = Regression_SS / Total_SS = 84.6244 / 201.4372 = 0.4201031 or 42%
+
+
+(g) What is the R2_adj for this model? 
+
+##### R2_adj would always be smaller than R2 due to a penalty of using additional variables:
+
+R2_adj = 1-(1-R2) * (n-1)/(n-k-1) = 1 - (1-0.4201031) * (113-1)) / (113-4-1) =  0.3986254 or 40%
+
+
+## 3. Questions based on the data from 55 college students.
+A classmate points out that there appears to be a contradiction in the R output, namely, while the ANOVA F statistic is significant, the t statistics for both predictors are insignificant. Is your classmate’s concern warranted? Briefly explain.
+
+#### Comment: all individual slope coefficients (after being regressed together) may be statistically  insignificant, as measured by individual t statistics, when the overall predictive power of the model, measured by F stats, is high. This is due to the fact that F stats uses H0 that at ALL the slopes are zeros at the same time. If at least one slope is not zero, the model could be VERY useful in predicting the response. At the same time, individual insignificant slope only means that it can be droped in the presence of other predictors, but this, however, will change the estimates of the remaining slopes.
+

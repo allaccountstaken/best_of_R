@@ -13,7 +13,6 @@ head(penguins)
 1. Produce a plot of body mass against flipper length for Gentoo penguins. Write the
 estimated linear regression equation.
 
-```{r}
 ``` {r}
 ggplot(penguins[which(penguins$species=='Gentoo'), ], aes(x=flipper_length_mm, y=body_mass_g))+
   geom_point()+

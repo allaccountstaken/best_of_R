@@ -15,3 +15,8 @@ Here is a well documented dataset with some information about residential mortga
 http://www.freddiemac.com/fmac-resources/research/pdf/user_guide.pdf
 
 Idea as explained on page 25 of the user guide: 1) MLR to predict Default Unpaid Balance followed by 2) Logistic clf to see if owner asks for some kind of loan modification, and repeat in reverse order.
+
+
+
+
+

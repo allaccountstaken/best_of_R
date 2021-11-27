@@ -1,0 +1,207 @@
+---
+title: 'STAT 6021: Project 2'
+author: "Connie Cui"
+date: "11/26/2021"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+---
+
+
+Load in packages
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+import data:
+```{r}
+house <- read.csv("house_data.csv")
+head(house)
+```
+find missing data:
+```{r}
+# list rows of data that have missing values
+house[!complete.cases(house),]
+```
+No missing data.
+Check data types of each variable:
+```{r}
+str(house)
+```
+We will definitely need to change the data type for the date column, and potentially look into creating factors for some of the more ordinal variables.
+```{r}
+house$date = substr(house$date,1,nchar(house$date)-7)
+head(house)
+```
+Convert date variabe to date type:
+```{r}
+house$date <- as.Date(house$date, "%Y%m%d")
+head(house)
+```
+Turning view, condition, and grade into ordered factors:
+```{r}
+house$view <- factor(house$view, ordered = TRUE, levels = c(0, 1, 2, 3, 4))
+house$condition <- factor(house$condition, ordered = TRUE, levels = c(1, 2, 3, 4, 5))
+house$grade <- factor(house$grade, ordered = TRUE, levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15))
+```
+
+
+
+## Part 2: EDA
+
+```{r}
+install.packages("systemfonts")
+```
+
+```{r}
+library(Hmisc)
+library(tidyverse)
+library(dplyr)
+library(faraway)
+library(gridExtra)
+library(dlookr)
+describe(house)
+```
+
+
+
+
+```{r}
+quant_vars = c("yr_built", "yr_renovated", "grade",
+               "floors", "bedrooms", "bathrooms", 
+               "sqft_living", "sqft_lot", "sqft_above", "sqft_basement", 
+               "sqft_living15", "sqft_lot15")
+
+cat_vars = c("waterfront", "view", "condition")
+
+library(Hmisc)
+hist.data.frame(house[,quant_vars])
+```
+
+
+
+```{r}
+hist(house[,cat_vars], breaks=10)
+```
+
+```{r}
+unique(house$view)
+```
+
+
+```{r}
+unique(house$waterfront)
+```
+
+
+```{r}
+unique(house$condition)
+```
+
+
+```{r}
+unique(house$grade)
+```
+
+"sqft_living", "sqft_lot", "sqft_above", "sqft_basement", 
+               "sqft_living15", "sqft_lot15"
+
+```{r}
+library(corrplot)
+library(ggplot2)
+cc = cor(house[,4:9])
+corrplot(cc, tl.col = "black", order = "hclust", hclust.method = "average", addrect = 4, tl.cex = 0.7)
+```
+
+
+```{r}
+dp1<-ggplot(house, aes(x=sqft_living, color=condition))+
+geom_density()+
+labs(title="Sqft_living by condition")
+
+
+dp2<-ggplot(house,aes(x=sqft_lot, color=condition))+
+geom_density()+
+labs(title="Sqft_lot by condition")
+
+
+dp3<-ggplot(house,aes(x=sqft_above, color=condition))+
+geom_density()+
+labs(title="Sqft_above by condition")
+
+
+dp4<-ggplot(house,aes(x=sqft_basement, color=condition))+
+geom_density()+
+labs(title="Sqft_basement by sqft_basement")
+
+dp5<-ggplot(house,aes(x=sqft_living15, color=condition))+
+geom_density()+
+labs(title="Sqft_living15 by condition")
+
+
+dp6<-ggplot(house,aes(x=sqft_lot15, color=condition))+
+geom_density()+
+labs(title="Sqft_lot15 by confition")
+
+
+##produce the 4 density plots in a 2 by 2 matrix
+grid.arrange(dp1, dp2, dp3, dp4, dp5, dp6, ncol = 2, nrow = 3)
+```
+
+
+
+"yr_built", "yr_renovated",  "floors", "bedrooms", "bathrooms" + grade?
+               
+
+
+```{r}
+dp1<-ggplot(house, aes(x=yr_built, color=condition))+
+geom_density()+
+labs(title="Yr_built by condition")
+
+
+dp2<-ggplot(house,aes(x=yr_renovated, color=condition))+
+geom_density()+
+labs(title="Yr_renovated by condition")
+
+
+dp3<-ggplot(house,aes(x=floors, color=condition))+
+geom_density()+
+labs(title="Floors by condition")
+
+
+dp4<-ggplot(house,aes(x=bedrooms, color=condition))+
+geom_density()+
+labs(title="Bedrooms by sqft_basement")
+
+dp5<-ggplot(house,aes(x=bathrooms, color=condition))+
+geom_density()+
+labs(title="Bathrooms by condition")
+
+
+dp6<-ggplot(house,aes(x=grade, color=condition))+
+geom_density()+
+labs(title="Ggrade by confition")
+
+
+##produce the 4 density plots in a 2 by 2 matrix
+grid.arrange(dp1, dp2, dp3, dp4, dp5, dp6, ncol = 2, nrow = 3)
+```
+
+
+TODO: se boxplots for binary waterfront and view
+bp1<-ggplot(train, aes(x=chd, y=age))+
+geom_boxplot()+
+labs(x="CHD", y="Age", title="Age by CHD")
+bp2<-ggplot(train, aes(x=chd, y=sdp))+
+geom_boxplot()+
+labs(x="CHD", y="Systolic", title="Systolic BP by CHD")
+bp3<-ggplot(train, aes(x=chd, y=dbp))+
+geom_boxplot()+
+labs(x="CHD", y="Diastolic", title="Diastolic BP by CHD")
+bp4<-ggplot(train, aes(x=chd, y=cigs))+
+geom_boxplot()+
+labs(x="CHD", y="Cigarettes", title="Cigs by CHD")
+##produce the 4 boxplots in a 2 by 2 matrix
+grid.arrange(bp1, bp2, bp3, bp4, ncol = 2, nrow = 2)

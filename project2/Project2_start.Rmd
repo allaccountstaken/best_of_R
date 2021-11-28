@@ -44,6 +44,7 @@ Turning view, condition, and grade into ordered factors:
 house$view <- factor(house$view, ordered = TRUE, levels = c(0, 1, 2, 3, 4))
 house$condition <- factor(house$condition, ordered = TRUE, levels = c(1, 2, 3, 4, 5))
 house$grade <- factor(house$grade, ordered = TRUE, levels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15))
+house$waterfront <- factor(house$waterfront, ordered = TRUE, levels = c(0, 1))
 ```
 
 
@@ -51,138 +52,195 @@ house$grade <- factor(house$grade, ordered = TRUE, levels = c(1, 2, 3, 4, 5, 6, 
 ## Part 2: EDA
 
 ```{r}
-install.packages("systemfonts")
-```
-
-```{r}
+#install.packages("ggcorrplot")
+#install.packages("miscset")
+library(miscset)
 library(Hmisc)
 library(tidyverse)
 library(dplyr)
 library(faraway)
 library(gridExtra)
-library(dlookr)
+```
+
+```{r}
+names(house)
+```
+
+#### Prior to dropping Date and Geotags consider using them for plotting, for example transaction counts by dates?
+
+
+```{r}
+house <- subset(house, select=-c(id,num, date, zipcode, lat, long))
+names(house)
+```
+
+```{r}
 describe(house)
 ```
 
 
+```{r}
+ggplot(house, aes(x=sqft_living, y=price, color=waterfront))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="sqft_living", 
+       y="price",
+       title="Scatter plot of price against sqft_living with waterfornt indicator")
+```
 
 
 ```{r}
-quant_vars = c("yr_built", "yr_renovated", "grade",
+ggplot(house, aes(x=sqft_living, y=price, color=view))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="sqft_living", 
+       y="price",
+       title="Scatter plot of price against sqft_living with view indicator")
+```
+
+
+```{r}
+ggplot(house, aes(x=sqft_living, y=price, color=condition))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="sqft_living", 
+       y="price",
+       title="Scatter plot of price against sqft_living with condition indicator")
+```
+
+
+```{r}
+ggplot(house, aes(x=sqft_living, y=price, color=grade))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="sqft_living", 
+       y="price",
+       title="Scatter plot of price against sqft_living with grade indicator")
+```
+
+#### Question: how to deal with indicator (ordinary) varibales in this case?
+
+
+```{r}
+quant_vars = c("yr_built", "yr_renovated",
                "floors", "bedrooms", "bathrooms", 
                "sqft_living", "sqft_lot", "sqft_above", "sqft_basement", 
                "sqft_living15", "sqft_lot15")
 
-cat_vars = c("waterfront", "view", "condition")
+cat_vars = c("waterfront", "view", "condition", "grade")
 
 library(Hmisc)
 hist.data.frame(house[,quant_vars])
 ```
 
-
-
 ```{r}
-hist(house[,cat_vars], breaks=10)
+ggplotGrid(ncol = 2,
+  lapply(c("view", "waterfront", "condition", "grade"),
+    function(col) {
+        ggplot(house, aes_string(col)) + geom_bar() + coord_flip()
+    }))
 ```
 
 ```{r}
-unique(house$view)
+ggplot(house, aes(x=waterfront, y=price))+
+geom_boxplot()+
+labs(x="waterfront", y="price", title="Price by waterfront")
 ```
 
 
-```{r}
-unique(house$waterfront)
-```
 
 
 ```{r}
-unique(house$condition)
-```
-
-
-```{r}
-unique(house$grade)
-```
-
-"sqft_living", "sqft_lot", "sqft_above", "sqft_basement", 
-               "sqft_living15", "sqft_lot15"
-
-```{r}
-library(corrplot)
-library(ggplot2)
-cc = cor(house[,4:9])
-corrplot(cc, tl.col = "black", order = "hclust", hclust.method = "average", addrect = 4, tl.cex = 0.7)
+ggplot(house, aes(x=view, y=price))+
+geom_boxplot()+
+labs(x="view", y="price", title="Price by view")
 ```
 
 
 ```{r}
-dp1<-ggplot(house, aes(x=sqft_living, color=condition))+
+ggplot(house, aes(x=condition, y=price))+
+geom_boxplot()+
+labs(x="condition", y="price", title="Price by condition")
+```
+
+
+```{r}
+ggplot(house, aes(x=grade, y=price))+
+geom_boxplot()+
+labs(x="grade", y="price", title="Price by grade")
+```
+
+```{r}
+head(house[, quant_vars])
+```
+
+
+
+```{r}
+dp1<-ggplot(house, aes(x=sqft_living, color=waterfront))+
 geom_density()+
-labs(title="Sqft_living by condition")
+labs(title="Sqft_living by waterfront")
 
 
-dp2<-ggplot(house,aes(x=sqft_lot, color=condition))+
+dp2<-ggplot(house,aes(x=sqft_lot, color=waterfront))+
 geom_density()+
-labs(title="Sqft_lot by condition")
+labs(title="Sqft_lot by waterfront")
 
 
-dp3<-ggplot(house,aes(x=sqft_above, color=condition))+
+dp3<-ggplot(house,aes(x=sqft_above, color=waterfront))+
 geom_density()+
-labs(title="Sqft_above by condition")
+labs(title="Sqft_above by waterfront")
 
 
-dp4<-ggplot(house,aes(x=sqft_basement, color=condition))+
+dp4<-ggplot(house,aes(x=sqft_basement, color=waterfront))+
 geom_density()+
-labs(title="Sqft_basement by sqft_basement")
+labs(title="Sqft_basement by waterfront")
 
-dp5<-ggplot(house,aes(x=sqft_living15, color=condition))+
+dp5<-ggplot(house,aes(x=sqft_living15, color=waterfront))+
 geom_density()+
-labs(title="Sqft_living15 by condition")
+labs(title="Sqft_living15 by waterfront")
 
 
-dp6<-ggplot(house,aes(x=sqft_lot15, color=condition))+
+dp6<-ggplot(house,aes(x=sqft_lot15, color=waterfront))+
 geom_density()+
-labs(title="Sqft_lot15 by confition")
+labs(title="Sqft_lot15 by waterfront")
 
 
 ##produce the 4 density plots in a 2 by 2 matrix
 grid.arrange(dp1, dp2, dp3, dp4, dp5, dp6, ncol = 2, nrow = 3)
 ```
 
-
-
-"yr_built", "yr_renovated",  "floors", "bedrooms", "bathrooms" + grade?
                
 
 
 ```{r}
-dp1<-ggplot(house, aes(x=yr_built, color=condition))+
+dp1<-ggplot(house, aes(x=yr_built, color=waterfront))+
 geom_density()+
-labs(title="Yr_built by condition")
+labs(title="Yr_built by waterfront")
 
 
-dp2<-ggplot(house,aes(x=yr_renovated, color=condition))+
+dp2<-ggplot(house,aes(x=yr_renovated, color=waterfront))+
 geom_density()+
-labs(title="Yr_renovated by condition")
+labs(title="Yr_renovated by waterfront")
 
 
-dp3<-ggplot(house,aes(x=floors, color=condition))+
+dp3<-ggplot(house,aes(x=floors, color=waterfront))+
 geom_density()+
-labs(title="Floors by condition")
+labs(title="Floors by waterfront")
 
 
-dp4<-ggplot(house,aes(x=bedrooms, color=condition))+
+dp4<-ggplot(house,aes(x=bedrooms, color=waterfront))+
 geom_density()+
-labs(title="Bedrooms by sqft_basement")
+labs(title="Bedrooms by waterfront")
 
-dp5<-ggplot(house,aes(x=bathrooms, color=condition))+
+dp5<-ggplot(house,aes(x=bathrooms, color=waterfront))+
 geom_density()+
-labs(title="Bathrooms by condition")
+labs(title="Bathrooms by waterfront")
 
 
-dp6<-ggplot(house,aes(x=grade, color=condition))+
+dp6<-ggplot(house,aes(x=grade, color=waterfront))+
 geom_density()+
-labs(title="Ggrade by confition")
+labs(title="Grade by waterfront")
 
 
 ##produce the 4 density plots in a 2 by 2 matrix
@@ -190,18 +248,36 @@ grid.arrange(dp1, dp2, dp3, dp4, dp5, dp6, ncol = 2, nrow = 3)
 ```
 
 
-TODO: se boxplots for binary waterfront and view
-bp1<-ggplot(train, aes(x=chd, y=age))+
-geom_boxplot()+
-labs(x="CHD", y="Age", title="Age by CHD")
-bp2<-ggplot(train, aes(x=chd, y=sdp))+
-geom_boxplot()+
-labs(x="CHD", y="Systolic", title="Systolic BP by CHD")
-bp3<-ggplot(train, aes(x=chd, y=dbp))+
-geom_boxplot()+
-labs(x="CHD", y="Diastolic", title="Diastolic BP by CHD")
-bp4<-ggplot(train, aes(x=chd, y=cigs))+
-geom_boxplot()+
-labs(x="CHD", y="Cigarettes", title="Cigs by CHD")
-##produce the 4 boxplots in a 2 by 2 matrix
-grid.arrange(bp1, bp2, bp3, bp4, ncol = 2, nrow = 2)
+```{r}
+corr <- round(cor(house[,c("price",quant_vars)]), 1)
+#head(corr[, 1:6])
+library(ggcorrplot)
+ggcorrplot(corr, 
+           method = "circle", 
+           lab = TRUE,
+           type = "lower", 
+           outline.color = "white", 
+           ggtheme = ggplot2::theme_gray,
+           colors = c("#6D9EC1", "white", "#E46726"))
+```
+
+
+
+
+
+## TODO: interpreting models https://cran.r-project.org/web/packages/jtools/vignettes/summ.html
+
+```{r}
+fit <- lm(price ~ ., data = house)
+summary(fit)
+```
+
+```{r}
+
+reduced <- lm(price ~ sqft_living+bedrooms+bathrooms+floors+waterfront+yr_built+sqft_living15+sqft_lot15, 
+              data = house)
+summary(reduced)
+```
+
+
+

@@ -170,10 +170,100 @@ geom_boxplot()+
 labs(x="grade", y="price", title="Price by grade")
 ```
 
+
+
 ```{r}
-head(house[, quant_vars])
+head(house)
 ```
 
+```{r}
+# Changing `view` to 0 for regular view and 1 for every other view
+house$view <- factor(ifelse(house$view!=0, 1, 0))
+# Changing `condition` to 0 for everything below 3 and 1 otherwise
+house$condition <- factor(ifelse(house$condition==1 | house$condition==2 | house$condition==3, 0, 1))
+# Changing `grade` to 0 for everything below 7 and 1 otherwise
+house$grade <- factor(ifelse(house$grade==1 | house$grade==2 | house$grade==3 |
+                      house$grade==4 | house$grade==5 | house$grade==7 , 0, 1))
+```
+
+
+```{r}
+ggplotGrid(ncol = 2,
+  lapply(c("view", "waterfront", "condition", "grade"),
+    function(col) {
+        ggplot(house, aes_string(col)) + geom_bar() + coord_flip()
+    }))
+```
+
+#### Checking possible interactions after mapping categorical variables to a larger classes
+
+```{r}
+ggplot(house, aes(x=sqft_living, y=price, color=view))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="sqft_living", 
+       y="price",
+       title="Scatter plot of price against sqft_living with view indicator")
+```
+```{r}
+ggplot(house, aes(x=sqft_living, y=price, color=condition))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="sqft_living", 
+       y="price",
+       title="Scatter plot of price against sqft_living with condition indicator")
+```
+
+
+```{r}
+ggplot(house, aes(x=sqft_living, y=price, color=grade))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="sqft_living", 
+       y="price",
+       title="Scatter plot of price against sqft_living with grade indicator")
+```
+
+
+
+#### Converting quantitative predictor floors to a factor 1, 2, 3.
+
+
+```{r}
+house$floors <- factor(ifelse(house$floors < 2, 1, ifelse(house$floors < 3, 2, ifelse(house$floors>=3, 3, 0))))
+```
+
+
+
+```{r}
+ggplot(house, aes(x=sqft_living, y=price, color=floors))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="sqft_living", 
+       y="price",
+       title="Scatter plot of price against sqft_living with floors indicator")
+```
+
+
+#### Computing age of the house
+
+```{r}
+house$age = ifelse(2021-house$yr_renovated >= 2021-house$yr_built, 2021-house$yr_built, 2021-house$yr_renovated)
+head(house)
+```
+
+```{r}
+hist(house$bathrooms)
+unique((house$bathrooms))
+```
+
+```{r}
+house <- subset(house, select=-c(yr_renovated, yr_built))
+head(house)
+```
+
+
+#### Other stuff 
 
 
 ```{r}
@@ -273,11 +363,86 @@ summary(fit)
 ```
 
 ```{r}
+plot(fit)
+```
+
+
+
+
+
+```{r}
 
 reduced <- lm(price ~ sqft_living+bedrooms+bathrooms+floors+waterfront+yr_built+sqft_living15+sqft_lot15, 
               data = house)
 summary(reduced)
 ```
+
+
+```{r}
+plot(reduced)
+```
+
+
+
+```{r}
+tiny <- lm(price ~ sqft_living15+bathrooms+waterfront, 
+              data = house)
+summary(tiny)
+```
+
+
+
+```{r}
+plot(tiny)
+```
+
+
+
+```{r}
+plot(house$price, house$sqft_living)
+```
+
+```{r}
+plot(house$price, house$bathrooms)
+```
+
+
+
+```{r}
+install.packages("plotly")
+```
+
+
+
+
+```{r}
+
+library(plotly)
+fig = list(
+  data = list(
+    list(
+      x = house$floors,
+      y = house$bedrooms,
+      type = 'bar'
+    )
+  ),
+  layout = list(
+    title = 'A Figure Specified By R List',
+    plot_bgcolor='#e5ecf6', 
+         xaxis = list( 
+           zerolinecolor = '#ffff', 
+           zerolinewidth = 2, 
+           gridcolor = 'ffff'), 
+         yaxis = list( 
+           zerolinecolor = '#ffff', 
+           zerolinewidth = 2, 
+           gridcolor = 'ffff')
+  )
+)
+# To display the figure defined by this list, use the plotly_build function
+plotly_build(fig)
+```
+
 
 
 

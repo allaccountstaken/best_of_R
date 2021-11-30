@@ -1,0 +1,157 @@
+---
+title: "Homework10"
+author: "Dima Mikhaylov"
+date: "11/15/2021"
+output: html_document
+---
+
+## PART 1   
+
+```{r}
+library(datasets) 
+library(tidyverse)
+data(swiss)
+head(swiss)
+```
+
+#### Three predictors (Education, Catholic, and Infant Mortality) will be used in the preferred model:
+
+
+```{r}
+# Fit the model
+mlr <- lm(Fertility ~ Education + Catholic + Infant.Mortality, data = swiss)
+summary(mlr)
+```
+
+
+(a) Are there any observations that are outlying? Be sure to show your work and explain how you arrived at your answer.
+
+
+#### Using studentized as well as externally studentized residuals to find possible outliers:
+
+```{r}
+# Critical value using Bonferroni procedure at 95% confidence level
+n <- dim(swiss)[1]
+p <- 4 #3 slopes and 1 for intercept
+critical <- qt(1-0.05/(2*n), n-1-p)
+cat("Critical value is", critical)
+```
+
+```{r}
+##Number of outliers predictors based on studentized residuals
+student.res<-rstandard(mlr)
+student.res[abs(student.res)>critical]
+```
+
+
+
+```{r}
+# Number of outliers predictors based on externally studentized residuals
+ext.student.res <- rstudent(mlr)
+ext.student.res[abs(ext.student.res)>critical]
+```
+
+#### Conclusion: based on standartized residuals, there are no outliers.
+
+
+(b) Are there any observations that have high leverage? Be sure to show your work and explain how you arrived at your answer.
+
+
+#### Checking for high leverage observations, below are 2 possible areas:
+
+```{r}
+# High leverage points above the cutoff
+leverage <- lm.influence(mlr)$hat
+leverage[leverage > 2* p/n]
+```
+
+
+(c) Are there any influential observations based on DFFITs and Cook’s Distance?
+
+#### Checking for influential observations DFFITs, below are 3 possible areas:
+
+```{r}
+# Influential observations in terms of y_hat_i
+DFFITS <- dffits(mlr)
+DFFITS[abs(DFFITS) >  2*sqrt(p/n)]
+```
+
+#### When using Cook's Distance, none detected:
+
+```{r}
+# Influential observations in terms of least-squares
+COOKS <- cooks.distance(mlr)
+COOKS[COOKS>qf(0.5,p,n-p)]
+```
+
+
+(d) Briefly describe the difference in what DFFITS and Cook’s distance are measuring
+
+#### Comment: DFFITS checks how removing an observation will change its own predicted value in terms of standard deviations. Cook's distance is a measure of how much the entire regression model changes when the high leverage observation is removed.
+
+
+## Part 2
+
+Data from n = 19 bears of varying ages are used to develop an equation for estimating Weight from Neck circumference
+
+(a) Calculate the externally studentized residual, t_i, for observation 6. Will this be considered outlying in the response?
+
+#### Externally studentized residual: t_6 = e_6 / sqrt(S2 * (1-h_6))
+
+```{r}
+h_6 = 0.23960510 # Leverage of the outlier
+S2_6 = 22.6 # Residual standard error with outlier was removed
+e_6 = 120.829070 # Residual of the outlier
+t_6 = (e_6) / sqrt( S2_6 * (1-h_6)) # Esternally studentized residual
+t_6
+```
+
+#### Check if it is greater than critical value. Yes, it appears highly significant.
+
+```{r}
+n<-18 # one bear is out
+p<-2 # number of params
+crit<-qt(1-0.05/(2*n), n-1-p) #critical value using Bonferroni procedure
+cat("Externally studentized residual greater than critical value: ", abs(t_6)>crit)
+```
+
+
+(b) What is the leverage for observation 6? Based on the criterion that leverages greater than 2p/n are considered outlying in the predictor(s), is this observation high leverage?
+
+#### Comment: yes, it is high leverage because it is greater than 2p/n cutoff.
+
+
+```{r}
+h_6 = 0.23960510
+p = 2 # Numer of params: 1 slope + intercepts
+n = 19 # Number of observations
+cutoff = (2*p)/n
+cat("Leverage for #6 is greater than the cutoff:" , (h_6 > cutoff))
+
+```
+
+(c) Calculate the DFFITS for observation 6. Briefly describe the role of leverages in DFFITS.
+
+#### DFFITS for #6 is given by the following: (y_hat - y_hat_6) / sqrt(S2 * h_6). The higher is the leverage the smaller is the overall difference between predictions with and without the influencial observation, because it is "pulling" the prediction toward itself harder when leverage is high.
+
+```{r}
+x_6 = 10.5 # Neck for bear #6
+
+y_hat = -158.78 + 16.95 * x_6 # Predicted weight for bear #6 with bear #6
+y_hat_6 = -234.60 + 20.54 * x_6 # Predicted weight for bear #6 without bear #6
+DFFITS_6 = (y_hat-y_hat_6)/sqrt(S2_6*h_6)
+cat("DFFITS for observation 6", DFFITS_6)
+```
+
+
+(d) Calculate Cook’s distance for observation 6.
+
+#### Cook's distance for #6 is given by (r_6^2 / p)*(h_6/(1-h_6))  where residual = 120.829070
+
+```{r}
+MS_res = 40.13 # Residual standard error for all observations
+r_6 = e_6 / sqrt( MS_res * (1-h_6)) 
+D_6 = (r_6^2/p)*(h_6/(1-h_6))
+cat("Cook's distance D_6 is", D_6)                 
+                  
+```

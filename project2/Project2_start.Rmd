@@ -259,7 +259,7 @@ unique((house$bathrooms))
 
 ```{r}
 house <- subset(house, select=-c(yr_renovated, yr_built))
-head(house)
+names(house)
 ```
 
 
@@ -358,7 +358,7 @@ ggcorrplot(corr,
 ## TODO: interpreting models https://cran.r-project.org/web/packages/jtools/vignettes/summ.html
 
 ```{r}
-fit <- lm(price ~ ., data = house)
+fit <- lm(price ~ . - sqft_basement, data = house)
 summary(fit)
 ```
 
@@ -372,7 +372,7 @@ plot(fit)
 
 ```{r}
 
-reduced <- lm(price ~ sqft_living+bedrooms+bathrooms+floors+waterfront+yr_built+sqft_living15+sqft_lot15, 
+reduced <- lm(log(price) ~ sqft_living+bedrooms+bathrooms+floors+waterfront+age+sqft_living15+sqft_lot15, 
               data = house)
 summary(reduced)
 ```

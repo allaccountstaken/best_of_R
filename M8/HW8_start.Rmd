@@ -135,10 +135,10 @@ cat("p_value of", p_value, "is very high what suggests statistically insignifica
 ```{r}
 g = 3 # number of pairwise comparisons
 a = 0.05 # original alpha
-p = 4 # params after the interaction terms were dropped 
+p = 4 # parameters after the interaction terms were dropped 
 n = 51 # number of observations
 df = n-p # degrees of freedom
-multiplier = qt(1-(a/2*g), df)
+multiplier = qt(1-(a/(2*g)), df)
 ```
 
 #### So, B2 of 529.4, B2_se=766.9, is the difference between South and North. Note Estimate < Error, this will produce a very wide range.

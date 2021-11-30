@@ -1,0 +1,182 @@
+---
+title: "LogisticReg_start"
+author: "Dima Mikhaylov"
+date: "11/17/2021"
+output: html_document
+---
+
+
+The Western Collaborative Group Study (WCGS) is one of the earliest studies regarding
+heart disease. Data were collected from 3154 males aged 39 to 59 in the San Francisco area
+in 1960. They all did not have coronary heart disease at the beginning of the study. The
+data set comes from the faraway package and is called wcgs. We will focus on predicting
+the likelihood of developing coronary heart disease based on the following predictors:
+• age: age in years
+• sdp: systolic blood pressure in mm Hg
+• dbp: diastolic blood pressure in mm Hg
+• cigs: number of cigarettes smoked per day
+• dibep: behavior type, labeled A and B for aggressive and passive respectively.
+
+The response variable is chd, whether the person developed coronary heart disease during
+annual follow ups in the study. Read the data in. We will also randomly split the data into
+two: half the data will be the training data set, and the remaining half will be the test
+data set. We will explore the training-test split in more detail in the next module. For this
+exercise, perform all analysis on the training data. The code below will randomly split the
+data into two halves.
+
+```{r}
+library(faraway)
+Data<-wcgs
+set.seed(6021) ##for reproducibility to get the same split
+sample<-sample.int(nrow(Data), floor(.50*nrow(Data)), replace = F)
+train<-Data[sample, ] ##training data frame
+test<-Data[-sample, ] ##test data frame
+head(train)
+```
+
+
+
+1. Before fitting a model, create some data visualizations to explore the relationship
+between these predictors and whether a middle-aged male develops coronary heart disease.
+
+```{r}
+train$chd <- factor(train$chd)
+levels(train$chd) <-c(1, 0) # 1 for No and 0 for Yes
+levels(train$chd)
+```
+
+
+```{r}
+prop.table(table(train$chd))
+```
+
+```{r}
+prop.table(table(test$chd))
+```
+
+```{r}
+table(train$age, train$chd)
+```
+
+```{r}
+table(train$cigs, train$chd)
+```
+
+
+```{r}
+predictors <- c("age", "sdp", "dbp", "cigs", "dibep")
+x_train<-data.frame(train[, predictors], )
+plot(x_train, lower.panel = NULL)
+```
+
+
+```{r}
+library(GGally)
+ggpairs(x_train)
+```
+
+```{r}
+install.packages("Hmisc")
+library(Hmisc)
+hist.data.frame(x_train)
+
+```
+
+```{r}
+library(tidyverse)
+```
+
+2. Use R to fit the logistic regression model using all the predictors listed above, and write the estimated logistic regression equation.
+
+```{r}
+result <- glm(chd ~ age + sdp + dbp + cigs + dibep, family='binomial', data = train)
+summary(result)
+```
+
+#### log(p/(1-p)) = -8.84 + 0.06 * age + 0.02 * sdp + 0.01 * dbp + 0.02 * cigs + 0.53 * dibepB
+
+3. Interpret the estimated coefficient for cigs in context.
+
+#### 0.02 * cigs -> increase in odds of 2%?
+
+```{r}
+exp(0.02)
+```
+
+4. Interpret the estimated coefficient for dibep in context.
+
+#### 0.53 * dibep -> the log oddsis 0.53 more for type B than A
+#### Or the odds of type B is 1.7 times the odds of A? Indicator var with 1 for type B...
+
+```{r}
+exp(0.53)
+```
+
+5. What are the estimated odds of developing heart disease for an adult male who is 45 years old, has a systolic blood pressure of 110 mm Hg, diastolic blood pressure of 70 mm Hg, does not smoke, and has type B personality? What is this person’s corresponding probability of developing heart disease?
+
+#### Computed below ?
+
+```{r}
+exp(-8.84 + 0.06 * 45 + 0.02 * 110 + 0.01 * 70 + 0.02 * 0 + 0.53 * 1)
+```
+
+
+6. Carry out the relevant hypothesis test to check if this logistic regression model with five predictors is useful in estimating the odds of heart disease. Clearly state the null and alternative hypotheses, test statistic, and conclusion in context.
+
+H0: B_age = B_sdp = B_dbp = B_cigs = B_dibep = 0
+Ha: B_age, B_sdp, B_dbp, B_cigs, and B_dibep NOT 0
+
+Null deviance: 893.04  on 1576  degrees of freedom
+Residual deviance: 837.55  on 1571  degrees of freedom
+
+```{r}
+TS <- result$null.deviance-result$deviance
+1-pchisq(TS, 5)
+```
+
+#### Conclusion: reject H0 => The model is usefull, at least one slope is NOT zero
+
+
+7. Suppose a co-worker of yours suggests fitting a logistic regression model without the two blood pressure variables. Carry out the relevant hypothesis test to check if this model without the blood pressure variables should be chosen over the previous model with all four predictors.
+
+H0: B_sdp = B_dbp = 0
+Ha: B_sdp and B_dbp not 0
+
+```{r}
+subset <- glm(chd ~ age + cigs + dibep, family='binomial', data = train)
+summary(subset)
+```
+
+```{r}
+TS_subset <- subset$deviance-result$deviance
+1-pchisq(TS_subset,2)
+```
+
+#### Conclusion: reject H0 that both predictors can be dropped, at least one is NOT zero?
+
+
+8. Based on the Wald test, is diastolic blood pressure a significant predictor of heart disease, when the other predictors are already in the model?
+
+
+```{r}
+summary(result)
+```
+
+```{r}
+coef(summary(result))
+```
+
+```{r}
+anova(result,test="Chisq")
+```
+
+
+```{r}
+confint.default(result) #Wald
+```
+
+
+
+9. Based on all the analysis performed, which of these predictors would you use in your logistic regression model?
+
+#### Age+Cigs+Dibep

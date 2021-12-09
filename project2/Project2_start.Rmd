@@ -364,7 +364,8 @@ summary(fit_les.sqft_basement)
 plot(fit_les.sqft_basement)
 ```
 
-# Questions: floors 1, 2, 3 as factors?
+# Questions: floors 1, 2, 3 as factors? Ordinal? But is 3 strictly better than 1?
+# Interaction of waterfront with what? sqft_living space?
 # N/A in sqft_basement
 # Will removing outliers help with Residuals/Fitted values
 

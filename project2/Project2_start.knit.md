@@ -1221,7 +1221,8 @@ F-statistic:  1962 on 15 and 21581 DF,  p-value: < 2.2e-16
 <!-- rnb-text-begin -->
 
 
-# Questions: floors 1, 2, 3 as factors?
+# Questions: floors 1, 2, 3 as factors? Ordinal? But is 3 strictly better than 1?
+# Interaction of waterfront with what? sqft_living space?
 # N/A in sqft_basement
 # Will removing outliers help with Residuals/Fitted values
 

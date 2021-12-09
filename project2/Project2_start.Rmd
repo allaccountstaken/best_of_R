@@ -212,7 +212,8 @@ grid.arrange(sp1, sp2, sp3, sp4, ncol = 2, nrow = 2)
 #### Final check, same scatter plots but with log(price) - no visiable interaction with log price.
 
 ```{r}
-sp1 <- ggplot(house, aes(x=sqft_living, y=log(price), color=waterfront))+
+
+sp1 <- ggplot(house, aes(x=sqft_living, y=price, color=waterfront))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
   labs(x="sqft_living", 
@@ -222,24 +223,27 @@ sp1 <- ggplot(house, aes(x=sqft_living, y=log(price), color=waterfront))+
 sp2 <- ggplot(house, aes(x=sqft_living, y=log(price), color=view))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
+  scale_fill_manual(values=c("red", "blue", "green"))+
   labs(x="sqft_living", 
        y="price",
-       title="Scatter plot of price against sqft_living with view indicator")
+       title="View indicator")
   
   
 sp3 <- ggplot(house, aes(x=sqft_living, y=log(price), color=condition))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
+  scale_fill_manual(values=c("red", "blue", "green"))+
   labs(x="sqft_living", 
        y="price",
-       title="Scatter plot of price against sqft_living with condition indicator")
+       title="Condition indicator")
   
 sp4 <- ggplot(house, aes(x=sqft_living, y=log(price), color=grade))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
+  scale_fill_manual(values=c("red", "blue", "green"))+
   labs(x="sqft_living", 
        y="price",
-       title="Scatter plot of price against sqft_living with grade indicator")
+       title="Grade indicator")
 
 ##produce the 4 density plots in a 2 by 2 matrix
 grid.arrange(sp1, sp2, sp3, sp4, ncol = 2, nrow = 2)
@@ -342,7 +346,7 @@ ggcorrplot(corr,
 ## TODO: interpreting models https://cran.r-project.org/web/packages/jtools/vignettes/summ.html
 
 ```{r}
-fit <- lm(log(price) ~ . , data = house)
+fit <- lm(log(price) ~ waterfront * sqft_living+. , data = house)
 summary(fit)
 ```
 
@@ -352,7 +356,7 @@ plot(fit)
 
 
 ```{r}
-fit_les.sqft_basement <- lm(log(price) ~ . - sqft_basement, data = house)
+fit_les.sqft_basement <- lm(log(price) ~ waterfront*sqft_living + . - sqft_basement, data = house)
 summary(fit_les.sqft_basement)
 ```
 

@@ -1,0 +1,106 @@
+---
+title: "LogisticInference_start"
+author: "Dima Mikhaylov"
+date: "12/1/2021"
+output: html_document
+---
+
+```{r}
+library(faraway)
+data <- wcgs 
+n <- dim(data)[1]
+names(data)
+```
+
+The variables of interest are:
+  * chd: ‘1’ indicating the person disease, and a ‘0’ indicating the person did not develop disease.
+  * age: age in years,
+  *sdp: systolic blood pressure in mm Hg,
+  * dbp: diastolic blood pressure in mm Hg,
+  * cigs: number of cigarettes smoked per day,
+  * dibep: behavior type, labeled A and B for aggressive and passive respectively.
+
+```{r}
+#data$chd <- factor(data$chd)
+#levels(data$chd) <-c(1, 0) # 1 for No and 0 for Yes
+#levels(data$chd)
+```
+
+
+Recall that we split the data into a training set and a test set (50-50 split) using set.seed(6021). Be sure to do this split, fit the logistic regression with the training data.
+
+```{r}
+set.seed(6021) ##for reproducibility to get the same split
+sample<-sample.int(nrow(data), floor(.50*nrow(data)), replace = F)
+train<-data[sample, ] ##training data frame
+test<-data[-sample, ] ##test data frame
+dim(train)[1]
+```
+
+From the previous guided question set, we went with a logistic regression model with age, sdp, cigs, and dibep as the predictors, dropping dbp from the model. We will now evaluate how our model performs in classifying the test data.
+
+
+
+```{r}
+result <- glm(chd ~ age + sdp + cigs + dibep, family='binomial', data = train)
+summary(result)
+```
+
+
+1. Based on the estimated coefficients of your logistic regression, briefly comment on the relationship between the predictors and the (log) odds of developing heart disease.
+
+#### Positive slopes thus positive relationship meaning all the predictors increase log oadds of developing the disease.
+
+2. Validate your logistic regression model using an ROC curve. What does your ROC curve tell you?
+
+```{r}
+#install.packages("ROCR")
+library(ROCR)
+
+preds <- predict(result, newdata=test, type='response')
+rates <- prediction(preds, test$chd)
+roc_result <- performance(rates, measure = 'tpr', x.measure = 'fpr')
+roc_result
+```
+
+```{r}
+plot(roc_result, title="The ROC curve")+
+lines(x = c(0,1), y = c(0, 1), col="red")
+```
+
+
+3. Find the AUC associated with your ROC curve. What does your AUC tell you?
+
+```{r}
+auc <- performance(rates, measure="auc")
+auc@y.values
+```
+
+4. Create a confusion matrix using a cutoff of 0.5. Report the accuracy, true positive rate (TPR), and false positive rate (FPR) at this cutoff.
+
+```{r}
+prop.table(table(test$chd))
+```
+
+
+```{r}
+table(test$chd, preds>0.3)
+```
+
+5. Based on the confusion matrix in part 4, a classmate says the logistic regression at this cutoff is as good as random guessing. Do you agree with your classmate’s statement? Briefly explain.
+
+
+
+
+
+6. Discuss if the threshold should be adjusted. Will it be better to raise or lower the threshold? Briefly explain.
+7. Based on your answer in part 6, adjust the threshold accordingly, and create the cor- responding confusion matrix. Report the accuracy, TPR, and FPR for this threshold.
+
+```{r}
+table(test$chd, preds>0.3)
+```
+
+8. Comment on the results from the confusions matrices in parts 4 and 7. What do you think is happening?
+
+
+

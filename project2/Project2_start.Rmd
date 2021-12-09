@@ -48,14 +48,13 @@ house$waterfront <- factor(house$waterfront, ordered = TRUE, levels = c(0, 1))
 ```
 
 
-
 ## Part 2: EDA
 
 ```{r}
 #install.packages("ggcorrplot")
 #install.packages("miscset")
-library(miscset)
-library(Hmisc)
+#library(miscset)
+#library(Hmisc)
 library(tidyverse)
 library(dplyr)
 library(faraway)
@@ -75,62 +74,52 @@ names(house)
 ```
 
 ```{r}
-describe(house)
+#describe(house)
 ```
 
 
+Summary plots:
 ```{r}
-ggplot(house, aes(x=sqft_living, y=price, color=waterfront))+
+sp1 <- ggplot(house, aes(x=sqft_living, y=price, color=waterfront))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
   labs(x="sqft_living", 
        y="price",
        title="Scatter plot of price against sqft_living with waterfornt indicator")
-```
 
-
-```{r}
-ggplot(house, aes(x=sqft_living, y=price, color=view))+
+sp2 <- ggplot(house, aes(x=sqft_living, y=price, color=view))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
   labs(x="sqft_living", 
        y="price",
        title="Scatter plot of price against sqft_living with view indicator")
-```
-
-
-```{r}
-ggplot(house, aes(x=sqft_living, y=price, color=condition))+
+  
+  
+sp3 <- ggplot(house, aes(x=sqft_living, y=price, color=condition))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
   labs(x="sqft_living", 
        y="price",
        title="Scatter plot of price against sqft_living with condition indicator")
-```
-
-
-```{r}
-ggplot(house, aes(x=sqft_living, y=price, color=grade))+
+  
+  
+  
+sp4 <- ggplot(house, aes(x=sqft_living, y=price, color=grade))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
   labs(x="sqft_living", 
        y="price",
        title="Scatter plot of price against sqft_living with grade indicator")
+
+##produce the 4 density plots in a 2 by 2 matrix
+grid.arrange(sp1, sp2, sp3, sp4, ncol = 2, nrow = 2)
 ```
 
-#### Question: how to deal with indicator (ordinary) varibales in this case?
 
+#### Question: how to deal with indicator (ordinary) varibales in this case? Map to binary classes:
 
 ```{r}
-quant_vars = c("yr_built", "yr_renovated",
-               "floors", "bedrooms", "bathrooms", 
-               "sqft_living", "sqft_lot", "sqft_above", "sqft_basement", 
-               "sqft_living15", "sqft_lot15")
-
 cat_vars = c("waterfront", "view", "condition", "grade")
-
-library(Hmisc)
-hist.data.frame(house[,quant_vars])
 ```
 
 ```{r}
@@ -142,39 +131,27 @@ ggplotGrid(ncol = 2,
 ```
 
 ```{r}
-ggplot(house, aes(x=waterfront, y=price))+
+bp1 <- ggplot(house, aes(x=waterfront, y=price))+
 geom_boxplot()+
 labs(x="waterfront", y="price", title="Price by waterfront")
-```
 
-
-
-
-```{r}
-ggplot(house, aes(x=view, y=price))+
+bp2 <- ggplot(house, aes(x=view, y=price))+
 geom_boxplot()+
 labs(x="view", y="price", title="Price by view")
-```
 
-
-```{r}
-ggplot(house, aes(x=condition, y=price))+
+bp3 <- ggplot(house, aes(x=condition, y=price))+
 geom_boxplot()+
 labs(x="condition", y="price", title="Price by condition")
-```
 
-
-```{r}
-ggplot(house, aes(x=grade, y=price))+
+bp4 <- ggplot(house, aes(x=grade, y=price))+
 geom_boxplot()+
 labs(x="grade", y="price", title="Price by grade")
+
+##produce the 4 density plots in a 2 by 2 matrix
+grid.arrange(bp1, bp2, bp3, bp4, ncol = 2, nrow = 2)
 ```
 
-
-
-```{r}
-head(house)
-```
+#### Map to binary classes and check distributions and interactions
 
 ```{r}
 # Changing `view` to 0 for regular view and 1 for every other view
@@ -197,33 +174,106 @@ ggplotGrid(ncol = 2,
 
 #### Checking possible interactions after mapping categorical variables to a larger classes
 
+
 ```{r}
-ggplot(house, aes(x=sqft_living, y=price, color=view))+
+sp1 <- ggplot(house, aes(x=sqft_living, y=price, color=waterfront))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="sqft_living", 
+       y="price",
+       title="Scatter plot of price against sqft_living with waterfornt indicator")
+
+sp2 <- ggplot(house, aes(x=sqft_living, y=price, color=view))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
   labs(x="sqft_living", 
        y="price",
        title="Scatter plot of price against sqft_living with view indicator")
-```
-```{r}
-ggplot(house, aes(x=sqft_living, y=price, color=condition))+
+  
+sp3 <- ggplot(house, aes(x=sqft_living, y=price, color=condition))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
   labs(x="sqft_living", 
        y="price",
        title="Scatter plot of price against sqft_living with condition indicator")
-```
-
-
-```{r}
-ggplot(house, aes(x=sqft_living, y=price, color=grade))+
+  
+sp4 <- ggplot(house, aes(x=sqft_living, y=price, color=grade))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
   labs(x="sqft_living", 
        y="price",
        title="Scatter plot of price against sqft_living with grade indicator")
+
+##produce the 4 density plots in a 2 by 2 matrix
+grid.arrange(sp1, sp2, sp3, sp4, ncol = 2, nrow = 2)
+
 ```
 
+#### Final check, same scatter plots but with log(price) - no visiable interaction with log price.
+
+```{r}
+sp1 <- ggplot(house, aes(x=sqft_living, y=log(price), color=waterfront))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="sqft_living", 
+       y="price",
+       title="Scatter plot of price against sqft_living with waterfornt indicator")
+
+sp2 <- ggplot(house, aes(x=sqft_living, y=log(price), color=view))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="sqft_living", 
+       y="price",
+       title="Scatter plot of price against sqft_living with view indicator")
+  
+  
+sp3 <- ggplot(house, aes(x=sqft_living, y=log(price), color=condition))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="sqft_living", 
+       y="price",
+       title="Scatter plot of price against sqft_living with condition indicator")
+  
+sp4 <- ggplot(house, aes(x=sqft_living, y=log(price), color=grade))+
+  geom_point()+
+  geom_smooth(method = "lm", se=FALSE)+
+  labs(x="sqft_living", 
+       y="price",
+       title="Scatter plot of price against sqft_living with grade indicator")
+
+##produce the 4 density plots in a 2 by 2 matrix
+grid.arrange(sp1, sp2, sp3, sp4, ncol = 2, nrow = 2)
+
+```
+
+#### Quantitative pridictors:
+
+```{r}
+
+quant_vars = c("yr_built", "yr_renovated",
+               "floors", "bedrooms", "bathrooms", 
+               "sqft_living", "sqft_lot", "sqft_above", "sqft_basement", 
+               "sqft_living15", "sqft_lot15")
+
+library(Hmisc)
+hist.data.frame(house[,quant_vars])
+
+```
+
+#### Checking how many quantitative observations have 0 values
+
+```{r}
+colSums(house[,quant_vars] == 0)
+```
+
+
+#### Probably some homes have no basements and thus zeros sqft_basement is okay, but all homes are expected to have non-zero number of bedrooms (13 zeros) and bathrooms (10 zeroz). Drop these rows:
+
+
+```{r}
+house <- filter(house, bathrooms != 0, bedrooms != 0)
+colSums(house[,quant_vars] == 0)
+```
 
 
 #### Converting quantitative predictor floors to a factor 1, 2, 3.
@@ -231,30 +281,27 @@ ggplot(house, aes(x=sqft_living, y=price, color=grade))+
 
 ```{r}
 house$floors <- factor(ifelse(house$floors < 2, 1, ifelse(house$floors < 3, 2, ifelse(house$floors>=3, 3, 0))))
-```
 
-
-
-```{r}
-ggplot(house, aes(x=sqft_living, y=price, color=floors))+
+sp_floors <- ggplot(house, aes(x=sqft_living, y=price, color=floors))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
   labs(x="sqft_living", 
        y="price",
        title="Scatter plot of price against sqft_living with floors indicator")
+
+bp_floors <- ggplot(house, aes(x=floors, y=price))+
+  geom_boxplot()+
+  labs(x="floors", y="price", title="Price by number of floors")
+
+grid.arrange(sp_floors, bp_floors, ncol = 2, nrow = 1)
 ```
 
 
-#### Computing age of the house
+#### Computing age of the house and removing year_build and year_renovated
 
 ```{r}
 house$age = ifelse(2021-house$yr_renovated >= 2021-house$yr_built, 2021-house$yr_built, 2021-house$yr_renovated)
 head(house)
-```
-
-```{r}
-hist(house$bathrooms)
-unique((house$bathrooms))
 ```
 
 ```{r}
@@ -263,89 +310,26 @@ names(house)
 ```
 
 
-#### Other stuff 
-
+#### Final set of quantitative vars:
 
 ```{r}
-dp1<-ggplot(house, aes(x=sqft_living, color=waterfront))+
-geom_density()+
-labs(title="Sqft_living by waterfront")
+quant_vars = c("age", "bedrooms", "bathrooms", 
+               "sqft_living", "sqft_lot", "sqft_above", "sqft_basement", 
+               "sqft_living15", "sqft_lot15")
 
+hist.data.frame(house[,quant_vars])
 
-dp2<-ggplot(house,aes(x=sqft_lot, color=waterfront))+
-geom_density()+
-labs(title="Sqft_lot by waterfront")
-
-
-dp3<-ggplot(house,aes(x=sqft_above, color=waterfront))+
-geom_density()+
-labs(title="Sqft_above by waterfront")
-
-
-dp4<-ggplot(house,aes(x=sqft_basement, color=waterfront))+
-geom_density()+
-labs(title="Sqft_basement by waterfront")
-
-dp5<-ggplot(house,aes(x=sqft_living15, color=waterfront))+
-geom_density()+
-labs(title="Sqft_living15 by waterfront")
-
-
-dp6<-ggplot(house,aes(x=sqft_lot15, color=waterfront))+
-geom_density()+
-labs(title="Sqft_lot15 by waterfront")
-
-
-##produce the 4 density plots in a 2 by 2 matrix
-grid.arrange(dp1, dp2, dp3, dp4, dp5, dp6, ncol = 2, nrow = 3)
 ```
-
                
-
-
-```{r}
-dp1<-ggplot(house, aes(x=yr_built, color=waterfront))+
-geom_density()+
-labs(title="Yr_built by waterfront")
-
-
-dp2<-ggplot(house,aes(x=yr_renovated, color=waterfront))+
-geom_density()+
-labs(title="Yr_renovated by waterfront")
-
-
-dp3<-ggplot(house,aes(x=floors, color=waterfront))+
-geom_density()+
-labs(title="Floors by waterfront")
-
-
-dp4<-ggplot(house,aes(x=bedrooms, color=waterfront))+
-geom_density()+
-labs(title="Bedrooms by waterfront")
-
-dp5<-ggplot(house,aes(x=bathrooms, color=waterfront))+
-geom_density()+
-labs(title="Bathrooms by waterfront")
-
-
-dp6<-ggplot(house,aes(x=grade, color=waterfront))+
-geom_density()+
-labs(title="Grade by waterfront")
-
-
-##produce the 4 density plots in a 2 by 2 matrix
-grid.arrange(dp1, dp2, dp3, dp4, dp5, dp6, ncol = 2, nrow = 3)
-```
-
+#### Correlations of quantitative vars:
 
 ```{r}
 corr <- round(cor(house[,c("price",quant_vars)]), 1)
-#head(corr[, 1:6])
 library(ggcorrplot)
 ggcorrplot(corr, 
            method = "circle", 
            lab = TRUE,
-           type = "lower", 
+          # type = "lower", 
            outline.color = "white", 
            ggtheme = ggplot2::theme_gray,
            colors = c("#6D9EC1", "white", "#E46726"))
@@ -358,7 +342,7 @@ ggcorrplot(corr,
 ## TODO: interpreting models https://cran.r-project.org/web/packages/jtools/vignettes/summ.html
 
 ```{r}
-fit <- lm(price ~ . - sqft_basement, data = house)
+fit <- lm(log(price) ~ . , data = house)
 summary(fit)
 ```
 
@@ -367,81 +351,26 @@ plot(fit)
 ```
 
 
-
-
-
 ```{r}
-
-reduced <- lm(log(price) ~ sqft_living+bedrooms+bathrooms+floors+waterfront+age+sqft_living15+sqft_lot15, 
-              data = house)
-summary(reduced)
-```
-
-
-```{r}
-plot(reduced)
-```
-
-
-
-```{r}
-tiny <- lm(price ~ sqft_living15+bathrooms+waterfront, 
-              data = house)
-summary(tiny)
-```
-
-
-
-```{r}
-plot(tiny)
-```
-
-
-
-```{r}
-plot(house$price, house$sqft_living)
+fit_les.sqft_basement <- lm(log(price) ~ . - sqft_basement, data = house)
+summary(fit_les.sqft_basement)
 ```
 
 ```{r}
-plot(house$price, house$bathrooms)
+plot(fit_les.sqft_basement)
 ```
 
-
+# Questions: floors 1, 2, 3 as factors?
+# N/A in sqft_basement
+# Will removing outliers help with Residuals/Fitted values
 
 ```{r}
-install.packages("plotly")
+str(house)
 ```
 
 
 
 
-```{r}
-
-library(plotly)
-fig = list(
-  data = list(
-    list(
-      x = house$floors,
-      y = house$bedrooms,
-      type = 'bar'
-    )
-  ),
-  layout = list(
-    title = 'A Figure Specified By R List',
-    plot_bgcolor='#e5ecf6', 
-         xaxis = list( 
-           zerolinecolor = '#ffff', 
-           zerolinewidth = 2, 
-           gridcolor = 'ffff'), 
-         yaxis = list( 
-           zerolinecolor = '#ffff', 
-           zerolinewidth = 2, 
-           gridcolor = 'ffff')
-  )
-)
-# To display the figure defined by this list, use the plotly_build function
-plotly_build(fig)
-```
 
 
 

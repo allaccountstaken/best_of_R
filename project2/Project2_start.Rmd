@@ -328,7 +328,12 @@ ggcorrplot(corr,
 ```
 
 ```{r}
-#write_csv(house, 'house_data_cleaned.csv')
+house <- subset(house, select=-sqft_above)
+names(house)
+```
+
+```{r}
+write_csv(house, 'house_data_cleaned.csv')
 ```
 
 
@@ -338,7 +343,7 @@ ggcorrplot(corr,
 ## Benchmark regression
 
 ```{r}
-fit <- lm(log(price) ~ . - sqft_living15 , data = house)
+fit <- lm(log(price) ~ . , data = house)
 summary(fit)
 ```
 
@@ -347,17 +352,10 @@ plot(fit)
 ```
 
 
-```{r}
-fit_interraction <- lm(log(price) ~ waterfront*sqft_living + . , data = house)
-summary(fit_interraction)
-```
-
-```{r}
-plot(fit_interraction)
-```
 
 
-## Regsubset regression 
+
+## Regsubsets regression 
 
 ```{r}
 library(leaps)
@@ -423,7 +421,7 @@ prop.table(table(train$value))
 
 
 ```{r}
-full_model<-glm(value ~ bathrooms+sqft_living+floors+waterfront+view+grade+sqft_living15+age, 
+full_model<-glm(value ~ bathrooms+bedrooms+sqft_living+floors+waterfront+view+grade+sqft_living15+age, 
                 family="binomial", data=train)
 summary(full_model)
 ```
@@ -464,14 +462,11 @@ cat("Error rate:", (cf[3]+cf[2])/(cf[1]+cf[2]+cf[3]+cf[4]))
 cat("Accuracy:", (cf[1]+cf[4])/(cf[1]+cf[2]+cf[3]+cf[4]))
 ```
 
-# Questions: floors 1, 2, 3 as factors? Ordinal? But is 3 strictly better than 1?
-# Interaction of waterfront with what? sqft_living space?
-# N/A in sqft_basement, 50% of observations have missing values
-# Will removing outliers help with Residuals/Fitted values
-# How to go from log(price) to 1/0 high value?
+# Check remove sqft_above
+# Influetial outliers
 
 ```{r}
-str(house)
+plot()
 ```
 
 

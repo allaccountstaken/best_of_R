@@ -214,7 +214,7 @@ grid.arrange(sp1, sp2, sp3, sp4, ncol = 2, nrow = 2)
 
 ```{r}
 
-sp1 <- ggplot(house, aes(x=sqft_living, y=price, color=waterfront))+
+sp1 <- ggplot(house, aes(x=sqft_living, y=log(price), color=waterfront))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
   labs(x="sqft_living", 
@@ -328,7 +328,7 @@ ggcorrplot(corr,
 ```
 
 ```{r}
-write_csv(house, 'house_data_cleaned.csv')
+#write_csv(house, 'house_data_cleaned.csv')
 ```
 
 
@@ -338,7 +338,7 @@ write_csv(house, 'house_data_cleaned.csv')
 ## Benchmark regression
 
 ```{r}
-fit <- lm(log(price) ~ . , data = house)
+fit <- lm(log(price) ~ . - sqft_living15 , data = house)
 summary(fit)
 ```
 
@@ -388,6 +388,9 @@ regfull <- lm(price ~ ., data=house)
 step(regfull, scope=list(lower=regnull, upper=regfull), direction = 'backward')
 ```
 
+```{r}
+?regsubsets
+```
 
 ##  Logistic Regression 
 

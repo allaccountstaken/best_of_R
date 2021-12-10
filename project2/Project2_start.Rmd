@@ -13,6 +13,7 @@ Load in packages
 ```{r}
 library(tidyverse)
 library(ggplot2)
+theme_set(theme_bw())
 ```
 import data:
 ```{r}
@@ -55,9 +56,9 @@ house$waterfront <- factor(house$waterfront, ordered = TRUE, levels = c(0, 1))
 #install.packages("miscset")
 #library(miscset)
 #library(Hmisc)
-library(tidyverse)
-library(dplyr)
-library(faraway)
+#library(tidyverse)
+#library(dplyr)
+#library(faraway)
 library(gridExtra)
 ```
 
@@ -245,6 +246,7 @@ sp4 <- ggplot(house, aes(x=sqft_living, y=log(price), color=grade))+
        y="price",
        title="Grade indicator")
 
+
 ##produce the 4 density plots in a 2 by 2 matrix
 grid.arrange(sp1, sp2, sp3, sp4, ncol = 2, nrow = 2)
 
@@ -271,7 +273,7 @@ colSums(house[,quant_vars] == 0)
 ```
 
 
-#### Probably some homes have no basements and thus zeros sqft_basement is okay, but all homes are expected to have non-zero number of bedrooms (13 zeros) and bathrooms (10 zeroz). Drop these rows:
+#### Some homes have no basements (more than 50%) also all homes are expected to have non-zero number of bedrooms (13 zeros) and bathrooms (10 zeroz). Drop sqft_basement column and bathroom/betroom rows with zeros:
 
 
 ```{r}
@@ -280,25 +282,11 @@ colSums(house[,quant_vars] == 0)
 ```
 
 
-#### Converting quantitative predictor floors to a factor 1, 2, 3.
-
-
 ```{r}
-house$floors <- factor(ifelse(house$floors < 2, 1, ifelse(house$floors < 3, 2, ifelse(house$floors>=3, 3, 0))))
-
-sp_floors <- ggplot(house, aes(x=sqft_living, y=price, color=floors))+
-  geom_point()+
-  geom_smooth(method = "lm", se=FALSE)+
-  labs(x="sqft_living", 
-       y="price",
-       title="Scatter plot of price against sqft_living with floors indicator")
-
-bp_floors <- ggplot(house, aes(x=floors, y=price))+
-  geom_boxplot()+
-  labs(x="floors", y="price", title="Price by number of floors")
-
-grid.arrange(sp_floors, bp_floors, ncol = 2, nrow = 1)
+house <- subset(house, select=-sqft_basement)
+names(house)
 ```
+
 
 
 #### Computing age of the house and removing year_build and year_renovated
@@ -317,8 +305,8 @@ names(house)
 #### Final set of quantitative vars:
 
 ```{r}
-quant_vars = c("age", "bedrooms", "bathrooms", 
-               "sqft_living", "sqft_lot", "sqft_above", "sqft_basement", 
+quant_vars = c("age", "bedrooms", "bathrooms", "floors",
+               "sqft_living", "sqft_lot", "sqft_above",  
                "sqft_living15", "sqft_lot15")
 
 hist.data.frame(house[,quant_vars])
@@ -339,14 +327,18 @@ ggcorrplot(corr,
            colors = c("#6D9EC1", "white", "#E46726"))
 ```
 
-
+```{r}
+write_csv(house, 'house_data_cleaned.csv')
+```
 
 
 
 ## TODO: interpreting models https://cran.r-project.org/web/packages/jtools/vignettes/summ.html
 
+## Benchmark regression
+
 ```{r}
-fit <- lm(log(price) ~ waterfront * sqft_living+. , data = house)
+fit <- lm(log(price) ~ . , data = house)
 summary(fit)
 ```
 
@@ -356,18 +348,124 @@ plot(fit)
 
 
 ```{r}
-fit_les.sqft_basement <- lm(log(price) ~ waterfront*sqft_living + . - sqft_basement, data = house)
-summary(fit_les.sqft_basement)
+fit_interraction <- lm(log(price) ~ waterfront*sqft_living + . , data = house)
+summary(fit_interraction)
 ```
 
 ```{r}
-plot(fit_les.sqft_basement)
+plot(fit_interraction)
+```
+
+
+## Regsubset regression 
+
+```{r}
+library(leaps)
+library(MASS)
+allregs <- regsubsets(log(price) ~ ., data=house, nbest=1)
+summary(allregs)
+
+```
+
+
+```{r}
+summary(allregs)$adjr2
+```
+
+```{r}
+coef(allregs, which.max(summary(allregs)$adjr2))
+```
+
+
+```{r}
+coef(allregs, which.min(summary(allregs)$bic))
+```
+
+
+```{r}
+regnull <- lm(price ~ 1, data=house)
+regfull <- lm(price ~ ., data=house)
+step(regfull, scope=list(lower=regnull, upper=regfull), direction = 'backward')
+```
+
+
+##  Logistic Regression 
+
+
+```{r}
+house$value <- factor(ifelse(house$price > 500000, 1, 0))
+prop.table(table(house$value))
+```
+
+
+
+```{r}
+house <- subset(house, select=-price)
+names(house)
+```
+
+
+```{r}
+##80-20 split
+set.seed(1)
+sample<-sample.int(nrow(house), floor(.80*nrow(house)), replace = F)
+train<-house[sample, ]
+test<-house[-sample, ]
+head(train)
+```
+
+```{r}
+prop.table(table(train$value))
+```
+
+
+```{r}
+full_model<-glm(value ~ bathrooms+sqft_living+floors+waterfront+view+grade+sqft_living15+age, 
+                family="binomial", data=train)
+summary(full_model)
+```
+
+```{r}
+library(ROCR)
+# Get predictions based on test holdout set
+preds <- predict(full_model, newdata=test, type='response')
+rates <- prediction(preds, test$value)
+roc_result <- performance(rates, measure = 'tpr', x.measure = 'fpr')
+plot(roc_result, title="The ROC curve")+
+lines(x = c(0,1), y = c(0, 1), col="red")
+
+
+```
+
+
+```{r}
+cf <- table(test$value, preds>0.5)
+cf
+```
+
+
+```{r}
+cat("False positive (type 1 error):", cf[3]/(cf[3]+cf[1]))
+```
+
+
+```{r}
+cat("False negative (type 2 error):", cf[2]/(cf[2]+cf[4]))
+```
+
+```{r}
+cat("Error rate:", (cf[3]+cf[2])/(cf[1]+cf[2]+cf[3]+cf[4]))
+```
+
+```{r}
+cat("Accuracy:", (cf[1]+cf[4])/(cf[1]+cf[2]+cf[3]+cf[4]))
 ```
 
 # Questions: floors 1, 2, 3 as factors? Ordinal? But is 3 strictly better than 1?
 # Interaction of waterfront with what? sqft_living space?
-# N/A in sqft_basement
+# N/A in sqft_basement, 50% of observations have missing values
 # Will removing outliers help with Residuals/Fitted values
+# How to go from log(price) to 1/0 high value?
 
 ```{r}
 str(house)

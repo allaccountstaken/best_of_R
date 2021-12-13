@@ -14,6 +14,7 @@ Load in packages
 library(tidyverse)
 library(ggplot2)
 library(ggcorrplot)
+library(Hmisc)
 ```
 import data:
 ```{r}
@@ -28,7 +29,7 @@ house[!complete.cases(house),]
 No missing data.
 Check data types of each variable:
 ```{r}
-str(house)
+dim(house) # original set has 22 vars, will be reduced down to 13
 ```
 We will definitely need to change the data type for the date column, and potentially look into creating factors for some of the more ordinal variables.
 ```{r}
@@ -128,6 +129,7 @@ ggplotGrid(ncol = 2, lapply(c("view", "waterfront", "condition", "grade"),
     function(col) {
         ggplot(house, aes_string(col)) + geom_bar() + coord_flip()
     }))+ scale_color_grey()
+
 ```
 
 ```{r}
@@ -290,7 +292,6 @@ quant_vars = c("yr_built", "yr_renovated",
                "sqft_above", "sqft_basement", 
                "sqft_living15", "sqft_lot15")
 
-library(Hmisc)
 hist.data.frame(house[,quant_vars])
 
 ```

@@ -173,7 +173,7 @@ grid.arrange(sp1+scale_color_grey(),
 
 
 
-#final check, same scatter plots but with log(price) - no visiable interaction with log price.
+#final check, same scatter plots but with log(price) - no visible interaction with log price.
 sp1 <- ggplot(house, aes(x=sqft_living, y=log(price), color=waterfront))+
   geom_point()+
   geom_smooth(method = "lm", se=FALSE)+
@@ -246,7 +246,7 @@ quant_vars = c("age", "bedrooms", "bathrooms", "floors",
 
 hist.data.frame(house[,quant_vars])
 
-#plotting correlations of price with quatitative predictors
+#plotting correlations of price with quantitative predictors
 grey_shades <- c('#DCDCDC','white',	'#696969')
 corr <- round(cor(house[,c("price",quant_vars)]), 1)
 ggcorrplot(corr, 
